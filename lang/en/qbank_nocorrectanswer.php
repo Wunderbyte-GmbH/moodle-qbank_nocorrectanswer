@@ -26,6 +26,13 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'No correct answer for active user';
+$string['shortcodes::correctanswers'] = "Display the correctly answered questions of the current user";
+$string['repeat_wrong'] = "Repeat incorrectly answered questions and improve!";
+$string['questions_statistic'] = "Question Statistics";
+$string['repeat_wrong_btn'] = "Repeat incorrect";
+$string['edited_questions'] = '{$a->edit} of {$a->absolute} edited';
+$string['correct_questions'] = '{$a->correct} of {$a->edit} correct';
+$string['wrong_questions'] = '{$a->wrong} of {$a->edit} incorrect';
 
 // Shortcodes.
 $string['correctanswers'] = "Display the correctly answered questions of the current user";

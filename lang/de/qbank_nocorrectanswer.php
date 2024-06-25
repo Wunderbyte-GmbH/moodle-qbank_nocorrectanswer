@@ -33,3 +33,6 @@ $string['edited_questions'] = "{$a} von {$b} bearbeitet";
 $string['correct_questions'] = "{$a} von {$b} korrekt";
 $string['wrong_questions'] = "{$a} von {$b} falsch";
 $string['questions_statistic'] = "Fragen-Statistik";
+
+// Shortcodes.
+$string['correctanswers'] = "Zeige die richtig beantworteten Fragen des aktuellen Benutzers an";

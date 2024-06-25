@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Shortcodes for qbank_nocorrectanswers
+ * Shortcodes for qbank_nocorrectanswer
  *
- * @package qbank_nocorrectanswers
+ * @package qbank_nocorrectanswer
  * @subpackage db
  * @copyright 2024 Georg Maißer
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,6 +29,6 @@ $shortcodes = [
     'correctanswers' => [
         'callback' => 'qbank_nocorrectanswer\shortcodes::correctanswers',
         'wraps' => false,
-        'description' => 'correctanswers',
+        'description' => 'shortcode:correctanswers',
     ],
 ];

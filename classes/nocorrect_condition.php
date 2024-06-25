@@ -35,6 +35,22 @@ class nocorrect_condition extends condition {
     /** @var array Contexts to be used. */
     protected $contexts = [];
 
+    /** @var array Contexts to be used. */
+    protected static $options = [
+        0 => [
+            "name" => "never played",
+            "sql" => "todo",
+        ],
+        1 => [
+            "name" => "correct",
+            "sql" => "gradedright",
+        ],
+        2 => [
+            "name" => "not correct",
+            "sql" => "gradedwrong",
+        ],
+    ];
+
     /** @var array List of IDs for tags that have been selected in the form. */
     protected $selectedtagids = [];
 
@@ -87,20 +103,42 @@ class nocorrect_condition extends condition {
     public static function build_query_from_filter(array $filter): array {
         global $DB, $USER;
 
-        // Remove empty string.
-        $filter['values'] = array_filter($filter['values']);
+        $selectedoptions = self::get_query_value($filter['values']);
+        $params = ['nocorrectuseruserid' => $USER->id];
+        $where = '';
 
-        $params = ['userid' => $USER->id];
-        $where = "q.id NOT IN (
-                    SELECT qa.questionid
-                    FROM m_question_attempt_steps qas
-                    JOIN m_question_attempts qa ON qa.id=qas.questionattemptid
-                    WHERE qas.state LIKE 'gradedright' AND qas.userid=:userid
-                    )";
+        if (!empty($selectedoptions)) {
+            $jointype = $filter['jointype'] ?? self::JOINTYPE_DEFAULT;
+            $equal = !($jointype === datafilter::JOINTYPE_NONE);
+            [$insql, $inparams] = $DB->get_in_or_equal($selectedoptions, SQL_PARAMS_NAMED, 'param', $equal);
+            $sql = "q.id NOT IN (
+                SELECT qa.questionid
+                FROM {question_attempt_steps} qas
+                JOIN {question_attempts} qa ON qa.id=qas.questionattemptid
+                WHERE qas.nocorrectuseruserid= AND qas.state $insql
+            )";
 
+            $params = array_merge($params, $inparams);
+        } else {
+            // If there are no selected options, use the default query.
+            $where = "q.id NOT IN (
+                SELECT qa.questionid
+                FROM {question_attempt_steps} qas
+                JOIN {question_attempts} qa ON qa.id=qas.questionattemptid
+                WHERE qas.state = 'gradedright' AND qas.userid=:nocorrectuseruserid
+            )";
+        }
         return [$where, $params];
     }
 
+    public static function get_query_value($filters) {
+        $selectedoptions = [];
+        foreach ($filters as $filter) {
+            $testing = self::$options[$filter];
+            $selectedoptions[] = self::$options[$filter]['sql'];
+        }
+        return $selectedoptions;
+    }
 
     public function get_title() {
         return get_string('pluginname', 'qbank_nocorrectanswer');
@@ -116,6 +154,14 @@ class nocorrect_condition extends condition {
 
     public function get_initial_values() {
         $values = [];
+        foreach (self::$options as $key => $option) {
+            $values[] = [
+                'value' => $key,
+                'title' => $option['name'],
+                'selected' => false,
+            ];
+        }
+
         return $values;
     }
 }
