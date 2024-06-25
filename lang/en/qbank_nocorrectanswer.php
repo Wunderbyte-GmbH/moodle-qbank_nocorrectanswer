@@ -26,4 +26,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'No correct answer for active user';
-$string['shortcodes::correctanswers'] = "Display the correctly answered questions of the current user";
+
+// Shortcodes.
+$string['correctanswers'] = "Display the correctly answered questions of the current user";
