@@ -1,0 +1,167 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_booking/business_card
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * data-region
+
+    Example context (json):
+    {
+        "piechart": "<div class=\"chart-area\" id=\"chart-area-667a7bc7a13d2667a7bc7995b77\"> <div class=\"chart-image\" role=\"presentation\" aria-describedby=\"chart-table-data-667a7bc7a13d2667a7bc7995b77\"></div> <div class=\"chart-table \"> <p class=\"chart-table-expand\"> <a href=\"#\" aria-controls=\"chart-table-data-667a7bc7a13d2667a7bc7995b77\" role=\"button\"> Show chart data </a> </p> <div class=\"chart-table-data\" id=\"chart-table-data-667a7bc7a13d2667a7bc7995b77\" role=\"complementary\" aria-expanded=\"false\"></div> </div> </div>",
+        "absquestions": "2",
+        "editedquestions": "[edit => 30, correct => 10, ...]",
+        "strings": "[edited_questions => 'Some text', questions_statistic => 'more texts', ...]",
+    }
+
+}}
+<div class="qbank_nocorrectanswer_question-statistics-container">
+    <div class="qbank_nocorrectanswer_card">
+        <div class="qbank_nocorrectanswer_card-header">
+            {{strings.questions_statistic}}
+        </div>
+        <div class="qbank_nocorrectanswer_card-body">
+            <div class="qbank_nocorrectanswer_progress-bar-container">
+                <div class="qbank_nocorrectanswer_piechart">
+                  {{{piechart}}}
+                </div>
+                <div class="qbank_nocorrectanswer_progress-text">
+                    <span>
+                     <i class="fa-solid fa-check-to-slot"></i>
+                      {{strings.edited_questions}}
+                    </span>
+                </div>
+            </div>
+            <div class="qbank_nocorrectanswer_statistics">
+                <div class="qbank_nocorrectanswer_stat-item">
+                    <i class="fas fa-check-circle"></i> {{strings.correct_questions}}
+                </div>
+                <div class="qbank_nocorrectanswer_stat-item">
+                    <i class="fas fa-exclamation-triangle"></i> {{strings.wrong_questions}}
+                </div>
+            </div>
+            <div class="qbank_nocorrectanswer_repeat-text">
+                {{strings.questions_statistic}}
+            </div>
+            <div class="qbank_nocorrectanswer_repeat-button">
+                <button class="qbank_nocorrectanswer_btn btn-primary">
+                  {{strings.repeat_wrong_btn}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+.chart-image {
+    width: 100% !important;
+    height: 15rem !important;
+    position: relative !important;
+}
+
+.chart-image canvas {
+  display: inline !important
+}
+.qbank_nocorrectanswer_question-statistics-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.qbank_nocorrectanswer_card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 500px
+}
+
+.qbank_nocorrectanswer_card-header {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+.qbank_nocorrectanswer_card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.qbank_nocorrectanswer_progress-bar-container {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.qbank_nocorrectanswer_progress-text {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.qbank_nocorrectanswer_statistics {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.qbank_nocorrectanswer_stat-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.qbank_nocorrectanswer_stat-item i {
+    margin-right: 10px;
+    color: green; /* Adjust color as needed for icons */
+}
+
+.qbank_nocorrectanswer_stat-item i.fa-exclamation-triangle {
+    color: red; /* Different color for the wrong icon */
+}
+
+.qbank_nocorrectanswer_repeat-text {
+    margin-bottom: 20px;
+    font-size: 0.9em;
+    color: #555;
+    text-align: center;
+}
+
+.qbank_nocorrectanswer_repeat-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.qbank_nocorrectanswer_btn {
+    background-color: #4caf50; /* Button color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.qbank_nocorrectanswer_btn:hover {
+    background-color: #45a049; /* Darker shade on hover */
+}
+</style>
