@@ -22,7 +22,7 @@ use core_question\local\bank\condition;
 /**
  * Question bank search class to allow searching/filtering by tags on a question.
  *
- * @package   qbank_tagquestion
+ * @package   qbank_nocorrectanswer
  * @copyright 2018 Ryan Wyllie <ryan@moodle.com>
  * @author    2021 Safat Shahin <safatshahin@catalyst-au.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -52,7 +52,7 @@ class nocorrect_condition extends condition {
     ];
 
     /** @var array List of IDs for tags that have been selected in the form. */
-    protected $selectedtagids = [];
+    protected $selectedoptionids = [];
 
     /**
      * Noccorectanswers condition constructor. It uses the qbank object and initialises all the its required information
@@ -79,6 +79,7 @@ class nocorrect_condition extends condition {
         }
         $thiscontext = $qbank->get_most_specific_context();
         $this->contexts[] = $thiscontext;
+        $this->selectedoptionids = $this->filter->values ?? [];
     }
 
     public static function get_condition_key() {
@@ -108,24 +109,30 @@ class nocorrect_condition extends condition {
         $where = '';
 
         if (!empty($selectedoptions)) {
-            $jointype = $filter['jointype'] ?? self::JOINTYPE_DEFAULT;
-            $equal = !($jointype === datafilter::JOINTYPE_NONE);
-            [$insql, $inparams] = $DB->get_in_or_equal($selectedoptions, SQL_PARAMS_NAMED, 'param', $equal);
-            $sql = "q.id NOT IN (
+            $sqlfraction = '';
+            $insql = '';
+            if (!empty($selectedoptions['fraction'])) {
+                $sqlfraction = ' AND qas.fraction IS NULL';
+            }
+            if (!empty($selectedoptions['in'])) {
+                $jointype = $filter['jointype'] ?? self::JOINTYPE_DEFAULT;
+                $equal = !($jointype === datafilter::JOINTYPE_NONE);
+                [$insql, $inparams] = $DB->get_in_or_equal($selectedoptions['in'], SQL_PARAMS_NAMED, 'param', $equal);
+                $insql = ' AND qas.state ' . $insql;
+                $params = array_merge($params, $inparams);
+            }
+            $where = "q.id NOT IN (
                 SELECT qa.questionid
                 FROM {question_attempt_steps} qas
                 JOIN {question_attempts} qa ON qa.id=qas.questionattemptid
-                WHERE qas.nocorrectuseruserid= AND qas.state $insql
-            )";
-
-            $params = array_merge($params, $inparams);
+                WHERE qas.userid=:nocorrectuseruserid" . $sqlfraction  . $insql . ")";
         } else {
             // If there are no selected options, use the default query.
             $where = "q.id NOT IN (
                 SELECT qa.questionid
                 FROM {question_attempt_steps} qas
                 JOIN {question_attempts} qa ON qa.id=qas.questionattemptid
-                WHERE qas.state = 'gradedright' AND qas.userid=:nocorrectuseruserid
+                WHERE qas.userid=:nocorrectuseruserid AND qas.state = 'gradedright'
             )";
         }
         return [$where, $params];
@@ -134,8 +141,12 @@ class nocorrect_condition extends condition {
     public static function get_query_value($filters) {
         $selectedoptions = [];
         foreach ($filters as $filter) {
-            $testing = self::$options[$filter];
-            $selectedoptions[] = self::$options[$filter]['sql'];
+            $filtername = self::$options[$filter]['sql'];
+            if ($filtername == 'todo') {
+                $selectedoptions['fraction'][] = $filtername;
+            } else {
+                $selectedoptions['in'][] = $filtername;
+            }
         }
         return $selectedoptions;
     }
@@ -158,7 +169,7 @@ class nocorrect_condition extends condition {
             $values[] = [
                 'value' => $key,
                 'title' => $option['name'],
-                'selected' => false,
+                'selected' => in_array($key, $this->selectedoptionids),
             ];
         }
 

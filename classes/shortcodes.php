@@ -25,8 +25,10 @@
  */
 
 namespace qbank_nocorrectanswer;
-use core\chart_series;
 use qbank_nocorrectanswer\output\overview;
+use qbank_nocorrectanswer\output\resultoverview;
+use qbank_nocorrectanswer\output\performanceoverview;
+
 
 /**
  * Deals with local_shortcodes regarding booking.
@@ -49,9 +51,14 @@ class shortcodes {
 
         global $PAGE, $USER, $DB, $OUTPUT;
 
-        $allquestions = self::get_all_questions($args);
+        $allquestions = qbank_nocorrectanswer::get_all_questions($args);
 
-        $editedquestions = self::get_all_edited_questions($args);
+        $editedquestions = qbank_nocorrectanswer::get_all_edited_questions($args);
+
+        $wrongquiz = null;
+        if (isset($args['quizlink'])) {
+            $wrongquiz = $args['quizlink'];
+        }
 
         // Get the renderer.
         $output = $PAGE->get_renderer('qbank_nocorrectanswer');
@@ -59,93 +66,53 @@ class shortcodes {
             [$editedquestions['correct'], $editedquestions['wrong']],
             ['Correct', 'Wrong'],
             count($allquestions),
-            $editedquestions
+            $editedquestions,
+            $wrongquiz
         );
         return $output->render_overview($data);
     }
 
-    public static function get_all_questions($args) {
-        global $DB;
-        $sql = "SELECT DISTINCT ON (q.id) q.*
-            FROM {question} q
-            WHERE q.id IN (
-                SELECT qa.questionid
-                FROM {question_attempt_steps} qas
-                JOIN {question_attempts} qa ON qa.id = qas.questionattemptid
-                JOIN {question_usages} qu ON qu.id = qa.questionusageid
-                JOIN {context} c ON c.id = qu.contextid
-                JOIN {question_bank_entries} qbe ON qbe.id = qa.questionid";
-        $params = [];
-        $sqlwhere = '';
-        if (isset($args['cmid'])) {
-            $sqlwhere .= " AND c.instanceid = :cinstanceid";
-            $params['cinstanceid'] = $args['cmid'];
-        }
+    /**
+     * This shortcode shows a list of results of questions
+     *
+     * @param string $shortcode
+     * @param array $args
+     * @param string|null $content
+     * @param object $env
+     * @param Closure $next
+     * @return string
+     */
+    public static function resultoverview($shortcode, $args, $content, $env, $next) {
+        global $PAGE;
+        // Get the renderer.
 
-        if (isset($args['qcatid'])) {
-            $sqlwhere .= " AND qbe.questioncategoryid = :qcatid";
-            $params['qcatid'] = $args['qcatid'];
-        }
+        $lastquiz = qbank_nocorrectanswer::get_last_quiz($args);
 
-        if ($sqlwhere !== '') {
-            $sql .= " WHERE " . ltrim($sqlwhere, ' AND');
-        }
-        $sql .= ")ORDER BY q.id;";
-        $records = $DB->get_records_sql($sql, $params);
+        $averagequiz = qbank_nocorrectanswer::get_average_quiz($args);
 
-        return $records;
+        $output = $PAGE->get_renderer('qbank_nocorrectanswer');
+        $data = new resultoverview(
+            $lastquiz,
+            $averagequiz
+        );
+        return $output->render_resultoverview($data);
     }
 
-    public static function get_all_edited_questions($args) {
-        global $DB, $USER;
-        $sql = "SELECT DISTINCT ON (q.id) q.*, qas.*
-            FROM {question} q
-            JOIN {question_attempts} qa ON q.id = qa.questionid
-            JOIN {question_attempt_steps} qas ON qas.questionattemptid = qa.id
-            WHERE q.id IN (
-                SELECT qa.questionid
-                FROM {question_attempt_steps} qas
-                JOIN {question_attempts} qa ON qa.id = qas.questionattemptid
-                JOIN {question_usages} qu ON qu.id = qa.questionusageid
-                JOIN {context} c ON c.id = qu.contextid
-                JOIN {question_bank_entries} qbe ON qbe.id = qa.questionid
-                WHERE qas.userid=:nocorrectuseruserid AND qas.state ";
-        $params = ['nocorrectuseruserid' => $USER->id];
-
-        [$insql, $inparams] = $DB->get_in_or_equal(['gradedright', 'gradedwrong'], SQL_PARAMS_NAMED, 'param', true);
-        $params = array_merge($params, $inparams);
-        $sql .= $insql;
-
-        if (isset($args['cmid'])) {
-            $sql .= " AND c.instanceid = :cinstanceid";
-            $params['cinstanceid'] = $args['cmid'];
-        }
-
-        if (isset($args['qcatid'])) {
-            $sql .= " AND qbe.questioncategoryid = :qcatid";
-            $params['qcatid'] = $args['qcatid'];
-        }
-
-        $sql .= ")ORDER BY q.id, qas.timecreated DESC;";
-        $records = $DB->get_records_sql($sql, $params);
-        $userquestions = self::get_user_questiond_data($records);
-
-        return $userquestions;
-    }
-
-    public static function get_user_questiond_data($records) {
-        $data = [
-            'edit' => count($records),
-            'correct' => 0,
-            'wrong' => 0,
-        ];
-        foreach ($records as $record) {
-            if ($record->state == 'gradedright') {
-                $data['correct']++;
-            } else {
-                $data['wrong']++;
-            }
-        }
-        return $data;
+    /**
+     * This shortcode shows a list of results of questions
+     *
+     * @param string $shortcode
+     * @param array $args
+     * @param string|null $content
+     * @param object $env
+     * @param Closure $next
+     * @return string
+     */
+    public static function performanceoverview($shortcode, $args, $content, $env, $next) {
+        global $PAGE;
+        // Get the renderer.
+        $output = $PAGE->get_renderer('qbank_nocorrectanswer');
+        $data = new performanceoverview();
+        return $output->render_performanceoverview($data);
     }
 }

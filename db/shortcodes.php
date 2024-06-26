@@ -29,6 +29,16 @@ $shortcodes = [
     'correctanswers' => [
         'callback' => 'qbank_nocorrectanswer\shortcodes::correctanswers',
         'wraps' => false,
-        'description' => 'shortcode:correctanswers',
+        'description' => 'correctanswers',
+    ],
+    'resultoverview' => [
+        'callback' => 'qbank_nocorrectanswer\shortcodes::resultoverview',
+        'wraps' => false,
+        'description' => 'resultoverview',
+    ],
+    'performanceoverview' => [
+        'callback' => 'qbank_nocorrectanswer\shortcodes::performanceoverview',
+        'wraps' => false,
+        'description' => 'performanceoverview',
     ],
 ];

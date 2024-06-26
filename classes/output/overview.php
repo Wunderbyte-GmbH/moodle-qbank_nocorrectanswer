@@ -52,6 +52,9 @@ class overview implements renderable, templatable {
     /** @var array $strings Localised strigns */
     public $strings = [];
 
+    /** @var string $wrongquiz Localised strigns */
+    public $wrongquiz = null;
+
     /**
      * Constructor
      *
@@ -61,15 +64,23 @@ class overview implements renderable, templatable {
      * @param array $editedquestions
      *
      */
-    public function __construct($series, $labels, $absquestions, $editedquestions) {
-        global $OUTPUT;
+    public function __construct($series, $labels, $absquestions, $editedquestions, $wrongquiz) {
+        global $OUTPUT, $PAGE;
+        if (
+            $series[0] == 0 &&
+            $series[1] == 0
+        ) {
+            $this->piechart = null;
+        } else {
+            $chart = new \core\chart_pie();
+            $series = new chart_series('Results', $series);
+            $chart->add_series($series);
+            $chart->set_labels($labels);
+            $chart->set_doughnut(true);
+            $this->piechart = $OUTPUT->render($chart);
+        }
+        $PAGE->requires->css('/question/bank/nocorrectanswer/styles/style.css');
 
-        $chart = new \core\chart_pie();
-        $series = new chart_series('Results', $series);
-        $chart->add_series($series);
-        $chart->set_labels($labels);
-        $chart->set_doughnut(true);
-        $this->piechart = $OUTPUT->render($chart);
         $this->absquestions = $absquestions;
         $this->editedquestions = $editedquestions;
         $this->strings = [
@@ -86,6 +97,7 @@ class overview implements renderable, templatable {
             ['wrong' => $this->editedquestions['wrong'], 'edit' => $this->editedquestions['edit']]
             ),
         ];
+        $this->wrongquiz = $wrongquiz;
     }
 
     /**
@@ -102,6 +114,7 @@ class overview implements renderable, templatable {
                 'absquestions' => $this->absquestions,
                 'editedquestions' => $this->editedquestions,
                 'strings' => $this->strings,
+                'wrongquiz' => $this->wrongquiz,
         ];
     }
 }

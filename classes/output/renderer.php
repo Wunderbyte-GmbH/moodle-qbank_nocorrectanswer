@@ -19,13 +19,15 @@
  *
  * @package qbank_nocorrectanswer
  * @copyright 2023 Wunderbyte GmbH <info@wunderbyte.at>
- * @author David Bogner, Andraž Prinčič
+ * @author David Bogner
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace qbank_nocorrectanswer\output;
 
 use qbank_nocorrectanswer\output\overview;
+use qbank_nocorrectanswer\output\resultoverview;
+use qbank_nocorrectanswer\output\performanceoverview;
 use plugin_renderer_base;
 
 /**
@@ -33,7 +35,7 @@ use plugin_renderer_base;
  *
  * @package qbank_nocorrectanswer
  * @copyright 2023 Wunderbyte GmbH <info@wunderbyte.at>
- * @author David Bogner, Andraž Prinčič
+ * @author David Bogner
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class renderer extends plugin_renderer_base {
@@ -47,6 +49,30 @@ class renderer extends plugin_renderer_base {
         $o = '';
         $data = $data->export_for_template($this);
         $o .= $this->render_from_template('qbank_nocorrectanswer/overview', $data);
+        return $o;
+    }
+
+    /**
+     * Function to print html qoverview
+     * @param resultoverview $data
+     * @return string
+     */
+    public function render_resultoverview(resultoverview $data) {
+        $o = '';
+        $data = $data->export_for_template($this);
+        $o .= $this->render_from_template('qbank_nocorrectanswer/resultoverview', $data);
+        return $o;
+    }
+
+    /**
+     * Function to print html qoverview
+     * @param performanceoverview $data
+     * @return string
+     */
+    public function render_performanceoverview(performanceoverview $data) {
+        $o = '';
+        $data = $data->export_for_template($this);
+        $o .= $this->render_from_template('qbank_nocorrectanswer/performanceoverview', $data);
         return $o;
     }
 }
