@@ -36,3 +36,34 @@ $string['wrong_questions'] = '{$a->wrong} of {$a->edit} incorrect';
 
 // Shortcodes.
 $string['correctanswers'] = "Display the correctly answered questions of the current user";
+$string['resultoverview'] = "Display an overview of all results";
+$string['performanceoverview'] = "Display an overview of users performance";
+
+// Result overview.
+$string['resultoverview_results'] = 'Results';
+$string['resultoverview_last_result'] = 'Your last exercise';
+$string['resultoverview_first_result'] = 'Original exercise';
+$string['resultoverview_current_values'] = 'Your most recent values';
+$string['resultoverview_points'] = 'Points:';
+$string['resultoverview_from'] = 'of';
+$string['resultoverview_percentage'] = 'Percentage rank: ';
+$string['resultoverview_test_value'] = 'Test value (standard value): ';
+$string['resultoverview_average'] = 'Average score: ';
+$string['resultoverview_max'] = 'Maximum score: ';
+$string['resultoverview_compare'] = 'Comparison values';
+$string['resultoverview_total'] = 'Total participants: ';
+$string['resultoverview_average_total'] = 'Average score: ';
+$string['resultoverview_max_total'] = 'Maximum score:';
+$string['resultoverview_information'] = '* Values may change over time.';
+$string['resultoverview_performance'] = 'Performance';
+
+// Performance overview.
+$string['performanceoverview_performance'] = 'Performance of the current exercise';
+$string['performanceoverview_from'] = 'of';
+$string['performanceoverview_points'] = 'points';
+$string['performanceoverview_average'] = 'Average performance of the last 5 exercises';
+$string['performanceoverview_current'] = 'Your current exercise compared to 2 participants:';
+$string['performanceoverview_average_total'] = 'Average value of the comparison group';
+$string['performanceoverview_max_total'] = 'Maximum score of the comparison group';
+$string['performanceoverview_testvalue'] = 'Test value';
+$string['performanceoverview_percentage'] = 'Percentage rank';

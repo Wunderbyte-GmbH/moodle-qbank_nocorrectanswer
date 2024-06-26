@@ -29,10 +29,40 @@ $string['pluginname'] = 'Keine richtige Antwort für aktiven Benutzer';
 $string['shortcodes::correctanswers'] = "Zeige die richtig beantworteten Fragen des aktuellen Benutzers an";
 $string['repeat_wrong'] = "Wiederhole falsch beantwortete Fragen und verbessere Dich!";
 $string['repeat_wrong_btn'] = "Falsche wiederholen";
-$string['edited_questions'] = "{$a} von {$b} bearbeitet";
-$string['correct_questions'] = "{$a} von {$b} korrekt";
-$string['wrong_questions'] = "{$a} von {$b} falsch";
-$string['questions_statistic'] = "Fragen-Statistik";
+$string['edited_questions'] = '{$a->edit} von {$a->absolute} bearbeitet';
+$string['correct_questions'] = '{$a->correct} von {$a->edit} korrekt';
+$string['wrong_questions'] = '{$a->wrong} von {$a->edit} falsch';
+$string['questions_statistic'] = 'Fragen-Statistik';
 
 // Shortcodes.
 $string['correctanswers'] = "Zeige die richtig beantworteten Fragen des aktuellen Benutzers an";
+
+
+// Result overview.
+$string['resultoverview_results'] = 'Ergebnisse';
+$string['resultoverview_last_result'] = "Deine letzte Übung";
+$string['resultoverview_first_result'] = "Originale Übung";
+$string['resultoverview_current_values'] = "Deine aktuellsten Werte";
+$string['resultoverview_points'] = 'Punkte:';
+$string['resultoverview_from'] = 'von';
+$string['resultoverview_percentage'] = 'Prozentrangwert: ';
+$string['resultoverview_test_value'] = 'Testwert (Standardwert): ';
+$string['resultoverview_average'] = 'Durchschnittliche Punktzahl: ';
+$string['resultoverview_max'] = 'Maximale Punktzahl: ';
+$string['resultoverview_compare'] = 'Vergleichswerte';
+$string['resultoverview_total'] = 'Gesamtzahl Teilnehmer: ';
+$string['resultoverview_average_total'] = 'Durchschnittliche Punktzahl: ';
+$string['resultoverview_max_total'] = 'Maximale Punktzahl:';
+$string['resultoverview_information'] = '* Werte können sich im weiteren Verlauf ändern.';
+$string['resultoverview_performance'] = 'Performance';
+
+// Performance overview.
+$string['performanceoverview_performance'] = 'Performance der aktuellen Übung';
+$string['performanceoverview_from'] = "von";
+$string['performanceoverview_points'] = "Punkten";
+$string['performanceoverview_average'] = "ø-Performance der letzten 5 Übungen";
+$string['performanceoverview_current'] = 'Deine aktuelle Übung im Vergleich zu 2 Teilnehmer:innen:';
+$string['performanceoverview_average_total'] = 'Mittelwert der Vergleichsgruppe';
+$string['performanceoverview_max_total'] = 'Maximale Punktzahl der Vergleichsgruppe';
+$string['performanceoverview_testvalue'] = 'Testwert';
+$string['performanceoverview_percentage'] = 'Prozentrang';

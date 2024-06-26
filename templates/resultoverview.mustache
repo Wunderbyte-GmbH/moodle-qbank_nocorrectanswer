@@ -26,45 +26,38 @@
     Example context (json):
     {
         "piechart": "<div class=\"chart-area\" id=\"chart-area-667a7bc7a13d2667a7bc7995b77\"> <div class=\"chart-image\" role=\"presentation\" aria-describedby=\"chart-table-data-667a7bc7a13d2667a7bc7995b77\"></div> <div class=\"chart-table \"> <p class=\"chart-table-expand\"> <a href=\"#\" aria-controls=\"chart-table-data-667a7bc7a13d2667a7bc7995b77\" role=\"button\"> Show chart data </a> </p> <div class=\"chart-table-data\" id=\"chart-table-data-667a7bc7a13d2667a7bc7995b77\" role=\"complementary\" aria-expanded=\"false\"></div> </div> </div>",
-        "absquestions": "2",
-        "editedquestions": "[edit => 30, correct => 10, ...]",
-        "strings": "[edited_questions => 'Some text', questions_statistic => 'more texts', ...]",
-        "wrongquiz": "www.link2quiz.at",
     }
 
 }}
 <div class="qbank_nocorrectanswer_question-statistics-container">
     <div class="qbank_nocorrectanswer_card">
         <div class="qbank_nocorrectanswer_card-header">
-            {{strings.questions_statistic}}
+            {{strings.resultoverview_results}}
         </div>
         <div class="qbank_nocorrectanswer_card-body">
-            {{#piechart}}
-              <div class="qbank_nocorrectanswer_progress-bar-container">
-                  <div class="qbank_nocorrectanswer_piechart">
-                    {{{piechart}}}
-                  </div>
-              </div>
-            {{/piechart}}
             <div class="qbank_nocorrectanswer_statistics">
-                <div class="qbank_nocorrectanswer_stat-item">
-                    <i class="fa-solid fa-check-to-slot"></i>
-                        {{strings.edited_questions}}
-                </div>
-                <div class="qbank_nocorrectanswer_stat-item">
-                    <i class="fas fa-check-circle"></i> {{strings.correct_questions}}
-                </div>
-                <div class="qbank_nocorrectanswer_stat-item">
-                    <i class="fas fa-exclamation-triangle"></i> {{strings.wrong_questions}}
-                </div>
+                <div class="qbank_nocorrectanswer_heading">{{strings.resultoverview_last_result}}</div>
+                <p>{{strings.resultoverview_first_result}}</p>
+                <div class="qbank_nocorrectanswer_heading">{{strings.resultoverview_current_values}}</div>
+                <p>{{strings.resultoverview_points}}
+                  <span class="qbank_nocorrectanswer_number">{{lastquiz.usergrade}}</span>
+                  {{strings.resultoverview_from}}
+                  <span class="qbank_nocorrectanswer_number">{{lastquiz.grade}}</span>
+                </p>
+                <p>{{strings.resultoverview_percentage}}<span class="qbank_nocorrectanswer_number">{{lastquiz.percentage}} %</span></p>
+                <p>{{strings.resultoverview_test_value}}<span class="qbank_nocorrectanswer_number">100</span></p>
+                <p>{{strings.resultoverview_average}}<span class="qbank_nocorrectanswer_number">0</span></p>
+                <p>{{strings.resultoverview_max}}<span class="qbank_nocorrectanswer_number">2</span></p>
+                <div class="qbank_nocorrectanswer_heading">{{strings.resultoverview_compare}}</div>
+                <p>{{strings.resultoverview_total}}<span class="qbank_nocorrectanswer_number"> {{averagequiz.num_participants}}</span></p>
+                <p>{{strings.resultoverview_average_total}}<span class="qbank_nocorrectanswer_number"> {{averagequiz.average_score}}</span></p>
+                <p>{{strings.resultoverview_max_total}}<span class="qbank_nocorrectanswer_number"> {{averagequiz.maximum_grade}}</span></p>
+                <p class="qbank_nocorrectanswer_small-text">{{strings.resultoverview_information}}</p>
             </div>
-            {{#wrongquiz}}
             <div class="qbank_nocorrectanswer_repeat-button">
-                <a href="{{wrongquiz}}" class="qbank_nocorrectanswer_btn btn-primary">
-                    {{strings.repeat_wrong_btn}}
-                </a>
+                <button class="qbank_nocorrectanswer_btn">{{strings.resultoverview_performance}}</button>
             </div>
-            {{/wrongquiz}}
         </div>
     </div>
 </div>
+
