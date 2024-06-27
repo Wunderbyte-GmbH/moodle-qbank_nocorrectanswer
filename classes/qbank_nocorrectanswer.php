@@ -144,11 +144,11 @@ class qbank_nocorrectanswer {
      */
     public static function get_last_quiz($args) {
         $data = [];
-        if ($args['quizid']) {
+        if (isset($args['cmid'])) {
             global $USER, $DB;
             $params = [
                 'userid' => $USER->id,
-                'quizid' => $args['quizid'],
+                'cmid' => $args['cmid'],
             ];
 
             $select = "SELECT
@@ -190,7 +190,8 @@ class qbank_nocorrectanswer {
         $from = "FROM {quiz_attempts} qa
               JOIN {quiz_grades} qg ON qg.quiz = qa.quiz
               JOIN {quiz} q ON q.id = qa.quiz
-              WHERE qa.userid =:userid AND qa.quiz =:quizid
+              JOIN {course_modules} cm ON cm.instance = q.id
+              WHERE qa.userid =:userid AND cm.id =:cmid
               ORDER BY qa.id DESC ";
         $sql = $select . $from;
         if ($limit > 0) {
@@ -207,16 +208,17 @@ class qbank_nocorrectanswer {
      */
     public static function get_average_quiz($args) {
         $data = [];
-        if ($args['quizid']) {
+        if (isset($args['cmid'])) {
             global $DB;
             $params = [
-                'quizid' => $args['quizid'],
+                'cmid' => $args['cmid'],
             ];
             $sql = "SELECT
                 COUNT(DISTINCT qa.userid) AS num_participants
                 FROM {quiz_grades} qg
                 JOIN {quiz_attempts} qa ON qg.quiz = qa.quiz
-                WHERE qa.quiz =:quizid";
+                JOIN {course_modules} cm ON cm.instance = qa.quiz
+                WHERE cm.id =:cmid";
 
             $data = $DB->get_records_sql($sql, $params);
             if ($data) {
@@ -234,11 +236,11 @@ class qbank_nocorrectanswer {
      */
     public static function get_last_five_quiz($args) {
         $average = 0;
-        if ($args['quizid']) {
+        if (isset($args['cmid'])) {
             global $USER, $DB;
             $params = [
                 'userid' => $USER->id,
-                'quizid' => $args['quizid'],
+                'cmid' => $args['cmid'],
             ];
             $select = "SELECT
                 qa.id,

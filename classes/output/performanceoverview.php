@@ -69,6 +69,8 @@ class performanceoverview implements renderable, templatable {
 
         $this->lastquiz = $lastquiz;
         $this->lastfivequiz = $lastfivequiz;
+        $numparticipants = 0;
+
         if (isset($this->lastquiz->sumgrades)) {
             $ration = $this->lastquiz->grade / $this->lastquiz->sumgrades;
             $lastseries = [
@@ -92,13 +94,16 @@ class performanceoverview implements renderable, templatable {
             $fivechart->set_labels(['Correct', 'Wrong']);
             $fivechart->set_doughnut(true);
             $this->fivepiechart = $OUTPUT->render($fivechart);
+            if (isset($averagequiz->num_participants)) {
+                $numparticipants = $averagequiz->num_participants;
+            }
         }
         $this->strings = [
           'performanceoverview_performance' => get_string('performanceoverview_performance', 'qbank_nocorrectanswer'),
           'performanceoverview_from' => get_string('performanceoverview_from', 'qbank_nocorrectanswer'),
           'performanceoverview_points' => get_string('performanceoverview_points', 'qbank_nocorrectanswer'),
           'performanceoverview_average' => get_string('performanceoverview_average', 'qbank_nocorrectanswer'),
-          'performanceoverview_current' => get_string('performanceoverview_current', 'qbank_nocorrectanswer', $averagequiz->num_participants),
+          'performanceoverview_current' => get_string('performanceoverview_current', 'qbank_nocorrectanswer', $numparticipants),
           'performanceoverview_average_total' => get_string('performanceoverview_average_total', 'qbank_nocorrectanswer'),
           'performanceoverview_max_total' => get_string('performanceoverview_max_total', 'qbank_nocorrectanswer'),
           'performanceoverview_testvalue' => get_string('performanceoverview_testvalue', 'qbank_nocorrectanswer'),
