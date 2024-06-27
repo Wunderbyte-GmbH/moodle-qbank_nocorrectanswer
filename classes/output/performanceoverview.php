@@ -49,6 +49,14 @@ class performanceoverview implements renderable, templatable {
     /** @var string $fivepiechart the note as it is saved in db */
     public $fivepiechart = null;
 
+    /** @var array $lastquiz the note as it is saved in db */
+    public $lastquiz = null;
+
+    /** @var int $lastfivequiz the note as it is saved in db */
+    public $lastfivequiz = null;
+
+    /** @var array $averagequiz the note as it is saved in db */
+    public $averagequiz = null;
 
     /**
      * Constructor
@@ -56,28 +64,41 @@ class performanceoverview implements renderable, templatable {
 
      *
      */
-    public function __construct() {
+    public function __construct($lastquiz, $lastfivequiz, $averagequiz) {
         global $OUTPUT;
 
-        $lastchart = new \core\chart_pie();
-        $series = new chart_series('Results', [5, 15]);
-        $lastchart->add_series($series);
-        $lastchart->set_labels(['Correct', 'Wrong']);
-        $lastchart->set_doughnut(true);
-        $this->lastpiechart = $OUTPUT->render($lastchart);
-        $fivechart = new \core\chart_pie();
-        $series = new chart_series('Results', [8, 12]);
-        $fivechart->add_series($series);
-        $fivechart->set_labels(['Correct', 'Wrong']);
-        $fivechart->set_doughnut(true);
-        $this->fivepiechart = $OUTPUT->render($fivechart);
+        $this->lastquiz = $lastquiz;
+        $this->lastfivequiz = $lastfivequiz;
+        if (isset($this->lastquiz->sumgrades)) {
+            $ration = $this->lastquiz->grade / $this->lastquiz->sumgrades;
+            $lastseries = [
+              $this->lastquiz->usersumgrade * $ration,
+              $this->lastquiz->grade - ($this->lastquiz->usersumgrade * $ration),
+            ];
+            $lastchart = new \core\chart_pie();
+            $series = new chart_series('Results', $lastseries);
+            $lastchart->add_series($series);
+            $lastchart->set_labels(['Correct', 'Wrong']);
+            $lastchart->set_doughnut(true);
+            $this->lastpiechart = $OUTPUT->render($lastchart);
 
+            $fiveseries = [
+              $lastfivequiz,
+              $this->lastquiz->grade - $lastfivequiz,
+            ];
+            $fivechart = new \core\chart_pie();
+            $series = new chart_series('Results', $fiveseries);
+            $fivechart->add_series($series);
+            $fivechart->set_labels(['Correct', 'Wrong']);
+            $fivechart->set_doughnut(true);
+            $this->fivepiechart = $OUTPUT->render($fivechart);
+        }
         $this->strings = [
           'performanceoverview_performance' => get_string('performanceoverview_performance', 'qbank_nocorrectanswer'),
           'performanceoverview_from' => get_string('performanceoverview_from', 'qbank_nocorrectanswer'),
           'performanceoverview_points' => get_string('performanceoverview_points', 'qbank_nocorrectanswer'),
           'performanceoverview_average' => get_string('performanceoverview_average', 'qbank_nocorrectanswer'),
-          'performanceoverview_current' => get_string('performanceoverview_current', 'qbank_nocorrectanswer'),
+          'performanceoverview_current' => get_string('performanceoverview_current', 'qbank_nocorrectanswer', $averagequiz->num_participants),
           'performanceoverview_average_total' => get_string('performanceoverview_average_total', 'qbank_nocorrectanswer'),
           'performanceoverview_max_total' => get_string('performanceoverview_max_total', 'qbank_nocorrectanswer'),
           'performanceoverview_testvalue' => get_string('performanceoverview_testvalue', 'qbank_nocorrectanswer'),
@@ -95,6 +116,9 @@ class performanceoverview implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output) {
         return [
+                'lastquiz' => $this->lastquiz,
+                'lastfivequiz' => $this->lastfivequiz,
+                'averagequiz' => $this->averagequiz,
                 'lastpiechart' => $this->lastpiechart,
                 'fivepiechart' => $this->fivepiechart,
                 'strings' => $this->strings,

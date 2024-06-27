@@ -31,6 +31,12 @@ namespace qbank_nocorrectanswer;
  */
 class qbank_nocorrectanswer {
 
+    /** @var string sql to be used. */
+    protected static $sql = "SELECT q.*
+          FROM {question} q
+          JOIN {question_versions} qv ON q.id = qv.questionid
+          JOIN {question_bank_entries} qbe ON qv.questionbankentryid = qbe.id";
+
     /**
      * Get all the questions.
      *
@@ -39,39 +45,33 @@ class qbank_nocorrectanswer {
      */
     public static function get_all_questions($args) {
         global $DB;
-        $sql = "SELECT DISTINCT ON (q.id) q.*
-            FROM {question} q
-            WHERE q.id IN (
-                SELECT qa.questionid
-                FROM {question_attempt_steps} qas
-                JOIN {question_attempts} qa ON qa.id = qas.questionattemptid
-                JOIN {question_usages} qu ON qu.id = qa.questionusageid
-                JOIN {context} c ON c.id = qu.contextid
-                JOIN {question_bank_entries} qbe ON qbe.id = qa.questionid";
-
         $params = [];
-        $sqlwhere = '';
-        if (isset($args['cmid'])) {
-            $sqlwhere .= " AND c.instanceid = :cinstanceid";
-            //$params['cinstanceid'] = $args['cmid'];
-        }
+        $select = "SELECT q.* ";
+        $where = '';
 
         if (isset($args['qcatid'])) {
-            $sqlwhere .= " AND qbe.questioncategoryid = :qcatid";
+            $where = " WHERE qbe.questioncategoryid = :qcatid";
             $params['qcatid'] = $args['qcatid'];
-            $paramscatid['qcatid'] = $args['qcatid'];
-            $sqlqcatid = "SELECT qbe.*
-              FROM {question_bank_entries} qbe
-              WHERE qbe.questioncategoryid =:qcatid";
-            return $DB->get_records_sql($sqlqcatid, $paramscatid);
         }
-        if ($sqlwhere !== '') {
-            //$sql .= " WHERE " . ltrim($sqlwhere, ' AND');
-        }
-        $sql .= ")ORDER BY q.id;";
-        $records = $DB->get_records_sql($sql, $params);
+        $sql = self::build_question_sql($select, $where);
 
+        $records = $DB->get_records_sql($sql, $params);
         return $records;
+    }
+
+    /**
+     * Get average quiz results.
+     *
+     * @param string $select
+     * @param string $join
+     * @return string
+     */
+    public static function build_question_sql($select, $join) {
+        $from = "FROM {question} q
+            JOIN {question_versions} qv ON q.id = qv.questionid
+            JOIN {question_bank_entries} qbe ON qv.questionbankentryid = qbe.id";
+        $sql = $select . $from . $join;
+        return $sql;
     }
 
     /**
@@ -82,41 +82,38 @@ class qbank_nocorrectanswer {
      */
     public static function get_all_edited_questions($args) {
         global $DB, $USER;
-        $sql = "SELECT DISTINCT ON (q.id) q.*, qas.*
-            FROM {question} q
-            JOIN {question_attempts} qa ON q.id = qa.questionid
-            JOIN {question_attempt_steps} qas ON qas.questionattemptid = qa.id
-            WHERE q.id IN (
-                SELECT qa.questionid
-                FROM {question_attempt_steps} qas
-                JOIN {question_attempts} qa ON qa.id = qas.questionattemptid
-                JOIN {question_usages} qu ON qu.id = qa.questionusageid
-                JOIN {context} c ON c.id = qu.contextid
-                JOIN {question_bank_entries} qbe ON qbe.id = qa.questionid
-                WHERE qas.userid=:nocorrectuseruserid AND qas.state ";
+        $sql = self::$sql;
+        $subwhere = " WHERE qas.userid=:nocorrectuseruserid AND qas.state ";
         $params = ['nocorrectuseruserid' => $USER->id];
 
         [$insql, $inparams] = $DB->get_in_or_equal(['gradedright', 'gradedwrong'], SQL_PARAMS_NAMED, 'param', true);
         $params = array_merge($params, $inparams);
-        $sql .= $insql;
+        $subwhere .= $insql;
 
         if (isset($args['cmid'])) {
-            $sql .= " AND c.instanceid = :cinstanceid";
+            $subwhere .= " AND c.instanceid = :cinstanceid";
             $params['cinstanceid'] = $args['cmid'];
         }
 
         if (isset($args['qcatid'])) {
-            $sql .= " AND qbe.questioncategoryid = :qcatid";
+            $subwhere .= " AND qbe.questioncategoryid = :qcatid";
             $params['qcatid'] = $args['qcatid'];
         }
-
-        $sql .= ")ORDER BY q.id, qas.timecreated DESC;";
+        $select = "SELECT q.*, subquery.state ";
+        $join = " JOIN (
+              SELECT qa.questionid, qas.state
+              FROM {question_attempt_steps} qas
+              JOIN {question_attempts} qa ON qa.id = qas.questionattemptid
+              JOIN {question_usages} qu ON qu.id = qa.questionusageid
+              JOIN {context} c ON c.id = qu.contextid
+              JOIN {question_bank_entries} qbe ON qa.questionid = qbe.id
+              " . $subwhere . ") subquery ON q.id = subquery.questionid";
+        $sql = self::build_question_sql($select, $join);
         $records = $DB->get_records_sql($sql, $params);
         $userquestions = self::get_user_questiond_data($records);
 
         return $userquestions;
     }
-
     /**
      * Get all edited, correct and wrong questions of user.
      *
@@ -154,23 +151,52 @@ class qbank_nocorrectanswer {
                 'quizid' => $args['quizid'],
             ];
 
-            $sql = "SELECT
-                CAST(qa.sumgrades AS INT) AS usersumgrade,
-                CAST(qg.grade AS INT) AS usergrade,
-                CAST(q.sumgrades AS INT) AS sumgrades,
-                CAST(q.grade AS INT) AS grade
-              FROM {quiz_attempts} qa
-              JOIN {quiz_grades} qg ON qg.quiz = qa.quiz
-              JOIN {quiz} q ON q.id = qa.quiz
-              WHERE qa.userid =:userid AND qa.quiz =:quizid
-              ORDER BY qa.id DESC LIMIT 1;";
+            $select = "SELECT
+                q.name,
+                qa.sumgrades AS usersumgrade,
+                qg.grade AS usergrade,
+                q.sumgrades AS sumgrades,
+                q.grade AS grade,
+                MAX(qa.sumgrades ) OVER (PARTITION BY qa.userid, qa.quiz) AS max_user_sumgrades,
+                AVG(qa.sumgrades) OVER (PARTITION BY qa.userid, qa.quiz) AS avg_user_sumgrades,
+                MAX(qa.sumgrades) OVER (PARTITION BY qa.quiz) AS max_total_sumgrades,
+                AVG(qa.sumgrades) OVER (PARTITION BY qa.quiz) AS avg_total_sumgrades ";
+            $sql = self::build_quiz_sql($select, 1);
             $data = $DB->get_records_sql($sql, $params);
             if ($data) {
                 $data = reset($data);
-                $data->percentage = (int) (($data->usergrade / $data->grade) * 100);
+                $data->usersumgrade = round($data->usersumgrade, 2);
+                $data->usergrade = round($data->usergrade, 2);
+                $data->sumgrades = round($data->sumgrades, 2);
+                $data->grade = round($data->grade, 2);
+                $data->max_user_sumgrades = round($data->max_user_sumgrades, 2);
+                $data->avg_user_sumgrades = round($data->avg_user_sumgrades, 2);
+                $data->max_total_sumgrades = round($data->max_total_sumgrades, 2);
+                $data->avg_total_sumgrades = round($data->avg_total_sumgrades, 2);
+                $data->percentage = round(($data->usergrade / $data->grade) * 100, 2);
             }
         }
         return $data;
+    }
+
+    /**
+     * Get average quiz results.
+     *
+     * @param string $select
+     * @param string $limit
+     * @return string
+     */
+    public static function build_quiz_sql($select, $limit) {
+        $from = "FROM {quiz_attempts} qa
+              JOIN {quiz_grades} qg ON qg.quiz = qa.quiz
+              JOIN {quiz} q ON q.id = qa.quiz
+              WHERE qa.userid =:userid AND qa.quiz =:quizid
+              ORDER BY qa.id DESC ";
+        $sql = $select . $from;
+        if ($limit > 0) {
+            $sql .= ' LIMIT ' . $limit;
+        }
+        return $sql;
     }
 
     /**
@@ -186,11 +212,8 @@ class qbank_nocorrectanswer {
             $params = [
                 'quizid' => $args['quizid'],
             ];
-
             $sql = "SELECT
-                CAST(AVG(qg.grade) AS INT) AS average_score,
-                COUNT(DISTINCT qa.userid) AS num_participants,
-                CAST(MAX(qg.grade) AS INT) AS maximum_grade
+                COUNT(DISTINCT qa.userid) AS num_participants
                 FROM {quiz_grades} qg
                 JOIN {quiz_attempts} qa ON qg.quiz = qa.quiz
                 WHERE qa.quiz =:quizid";
@@ -201,5 +224,39 @@ class qbank_nocorrectanswer {
             }
         }
         return $data;
+    }
+
+    /**
+     * Get all edited, correct and wrong questions of user.
+     *
+     * @param array $args
+     * @return float
+     */
+    public static function get_last_five_quiz($args) {
+        $average = 0;
+        if ($args['quizid']) {
+            global $USER, $DB;
+            $params = [
+                'userid' => $USER->id,
+                'quizid' => $args['quizid'],
+            ];
+            $select = "SELECT
+                qa.id,
+                qa.sumgrades AS usersumgrade,
+                qg.grade AS usergrade,
+                q.sumgrades  AS sumgrades,
+                q.grade AS grade ";
+            $sql = self::build_quiz_sql($select, 5);
+            $results = $DB->get_records_sql($sql, $params);
+            $sumgrade = 0;
+            foreach ($results as $result) {
+                $average += $result->usersumgrade;
+                $sumgrade = $result->sumgrades;
+            }
+            if ($results) {
+                $average = $average * $sumgrade / count($results);
+            }
+        }
+        return (int) $average;
     }
 }

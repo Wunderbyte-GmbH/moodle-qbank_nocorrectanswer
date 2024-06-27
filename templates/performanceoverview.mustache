@@ -31,33 +31,52 @@
 }}
 <div class="qbank_nocorrectanswer_question-statistics-container">
     <div class="qbank_nocorrectanswer_results-overview">
+        {{#lastpiechart}}
         <div class="qbank_nocorrectanswer_results-card">
             <h6>{{strings.performanceoverview_performance}}</h6>
             <div class="qbank_nocorrectanswer_chart-image">
                 {{{lastpiechart}}}
-                <span class="qbank_nocorrectanswer_number">0</span> {{strings.performanceoverview_from}} <span class="qbank_nocorrectanswer_number">24 {{strings.performanceoverview_points}}</span>
+                <span class="qbank_nocorrectanswer_number">
+                    {{lastquiz.usergrade}}
+                </span> {{strings.performanceoverview_from}} <span class="qbank_nocorrectanswer_number">
+                  {{lastquiz.grade}}
+                  {{strings.performanceoverview_points}}
+                </span>
             </div>
         </div>
+        {{/lastpiechart}}
+        {{#fivepiechart}}
         <div class="qbank_nocorrectanswer_results-card">
             <h6>{{strings.performanceoverview_average}}</h6>
             <div class="qbank_nocorrectanswer_chart-image">
                 {{{fivepiechart}}}
-                <span class="qbank_nocorrectanswer_number">0</span> {{strings.performanceoverview_from}} <span class="qbank_nocorrectanswer_number">24 {{strings.performanceoverview_points}}</span>
+                <span class="qbank_nocorrectanswer_number">
+                  {{lastfivequiz}}
+                </span> {{strings.performanceoverview_from}}
+                <span class="qbank_nocorrectanswer_number">
+                  {{lastquiz.grade}}
+                  {{strings.performanceoverview_points}}
+                </span>
             </div>
         </div>
+        {{/fivepiechart}}
         <div class="qbank_nocorrectanswer_comparison-text">{{strings.performanceoverview_current}}</div>
         <div class="qbank_nocorrectanswer_results-card">
             <h6>{{strings.performanceoverview_average_total}}</h6>
             <div class='qbank_nocorrectanswer_icon_value'>
                 <i class="fas fa-tachometer-average"></i>
-                <span class="qbank_nocorrectanswer_number">0,0</span>
+                <span class="qbank_nocorrectanswer_number">
+                  {{lastquiz.avg_total_sumgrades}}
+                </span>
             </div>
         </div>
         <div class="qbank_nocorrectanswer_results-card">
             <h6>{{strings.performanceoverview_max_total}}</h6>
             <div class='qbank_nocorrectanswer_icon_value'>
                 <i class="fa fa-star"></i>
-                <span class="qbank_nocorrectanswer_number">0</span>
+                <span class="qbank_nocorrectanswer_number">
+                  {{lastquiz.max_total_sumgrades}}
+                </span>
             </div>
         </div>
         <div class="qbank_nocorrectanswer_results-card">

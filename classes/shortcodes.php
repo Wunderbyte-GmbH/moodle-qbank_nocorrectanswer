@@ -111,8 +111,15 @@ class shortcodes {
     public static function performanceoverview($shortcode, $args, $content, $env, $next) {
         global $PAGE;
         // Get the renderer.
+        $lastquiz = qbank_nocorrectanswer::get_last_quiz($args);
+        $lastfivequiz = qbank_nocorrectanswer::get_last_five_quiz($args);
+        $averagequiz = qbank_nocorrectanswer::get_average_quiz($args);
         $output = $PAGE->get_renderer('qbank_nocorrectanswer');
-        $data = new performanceoverview();
+        $data = new performanceoverview(
+            $lastquiz,
+            $lastfivequiz,
+            $averagequiz
+        );
         return $output->render_performanceoverview($data);
     }
 }

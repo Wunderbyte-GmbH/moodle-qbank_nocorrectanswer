@@ -37,7 +37,7 @@
         <div class="qbank_nocorrectanswer_card-body">
             <div class="qbank_nocorrectanswer_statistics">
                 <div class="qbank_nocorrectanswer_heading">{{strings.resultoverview_last_result}}</div>
-                <p>{{strings.resultoverview_first_result}}</p>
+                <p>{{lastquiz.name}}</p>
                 <div class="qbank_nocorrectanswer_heading">{{strings.resultoverview_current_values}}</div>
                 <p>{{strings.resultoverview_points}}
                   <span class="qbank_nocorrectanswer_number">{{lastquiz.usergrade}}</span>
@@ -46,12 +46,12 @@
                 </p>
                 <p>{{strings.resultoverview_percentage}}<span class="qbank_nocorrectanswer_number">{{lastquiz.percentage}} %</span></p>
                 <p>{{strings.resultoverview_test_value}}<span class="qbank_nocorrectanswer_number">100</span></p>
-                <p>{{strings.resultoverview_average}}<span class="qbank_nocorrectanswer_number">0</span></p>
-                <p>{{strings.resultoverview_max}}<span class="qbank_nocorrectanswer_number">2</span></p>
+                <p>{{strings.resultoverview_average}}<span class="qbank_nocorrectanswer_number">{{lastquiz.avg_user_sumgrades}}</span></p>
+                <p>{{strings.resultoverview_max}}<span class="qbank_nocorrectanswer_number">{{lastquiz.max_user_sumgrades}}</span></p>
                 <div class="qbank_nocorrectanswer_heading">{{strings.resultoverview_compare}}</div>
                 <p>{{strings.resultoverview_total}}<span class="qbank_nocorrectanswer_number"> {{averagequiz.num_participants}}</span></p>
-                <p>{{strings.resultoverview_average_total}}<span class="qbank_nocorrectanswer_number"> {{averagequiz.average_score}}</span></p>
-                <p>{{strings.resultoverview_max_total}}<span class="qbank_nocorrectanswer_number"> {{averagequiz.maximum_grade}}</span></p>
+                <p>{{strings.resultoverview_average_total}}<span class="qbank_nocorrectanswer_number"> {{lastquiz.avg_total_sumgrades}}</span></p>
+                <p>{{strings.resultoverview_max_total}}<span class="qbank_nocorrectanswer_number"> {{lastquiz.max_total_sumgrades}}</span></p>
                 <p class="qbank_nocorrectanswer_small-text">{{strings.resultoverview_information}}</p>
             </div>
             <div class="qbank_nocorrectanswer_repeat-button">
