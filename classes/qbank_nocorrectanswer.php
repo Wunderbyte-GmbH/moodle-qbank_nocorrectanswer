@@ -165,15 +165,15 @@ class qbank_nocorrectanswer {
             $data = $DB->get_records_sql($sql, $params);
             if ($data) {
                 $data = reset($data);
-                $data->usersumgrade = round($data->usersumgrade, 2);
-                $data->usergrade = round($data->usergrade, 2);
-                $data->sumgrades = round($data->sumgrades, 2);
-                $data->grade = round($data->grade, 2);
-                $data->max_user_sumgrades = round($data->max_user_sumgrades, 2);
-                $data->avg_user_sumgrades = round($data->avg_user_sumgrades, 2);
-                $data->max_total_sumgrades = round($data->max_total_sumgrades, 2);
-                $data->avg_total_sumgrades = round($data->avg_total_sumgrades, 2);
-                $data->percentage = round(($data->usergrade / $data->grade) * 100, 2);
+                $data->usersumgrade = round($data->usersumgrade ?? 0, 2);
+                $data->usergrade = round($data->usergrade ?? 0, 2);
+                $data->sumgrades = round($data->sumgrades ?? 0, 2);
+                $data->grade = round($data->grade ?? 0, 2);
+                $data->max_user_sumgrades = round($data->max_user_sumgrades ?? 0, 2);
+                $data->avg_user_sumgrades = round($data->avg_user_sumgrades ?? 0, 2);
+                $data->max_total_sumgrades = round($data->max_total_sumgrades ?? 0, 2);
+                $data->avg_total_sumgrades = round($data->avg_total_sumgrades ?? 0, 2);
+                $data->percentage = round((($data->usergrade ?? 0) / ($data->grade ?? 1)) * 100, 2);
             }
         }
         return $data;
