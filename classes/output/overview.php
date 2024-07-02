@@ -79,8 +79,6 @@ class overview implements renderable, templatable {
             $chart->set_doughnut(true);
             $this->piechart = $OUTPUT->render($chart);
         }
-        $PAGE->requires->css('/question/bank/nocorrectanswer/styles/style.css');
-
         $this->absquestions = $absquestions;
         $this->editedquestions = $editedquestions;
         $this->strings = [
