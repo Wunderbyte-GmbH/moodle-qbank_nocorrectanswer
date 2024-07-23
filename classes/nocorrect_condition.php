@@ -151,7 +151,7 @@ class nocorrect_condition extends condition {
         global $DB, $USER;
 
        // $questions = qbank_nocorrectanswer::get_all_edited_questions($filter);
-        $cmid = required_param('cmid', PARAM_INT);
+        $cmid = optional_param('cmid', 0, PARAM_INT);
         $preferencekey = 'qbank_nocorret_'  . $USER->id . '_' . $cmid;
         $selectedoptions = self::get_query_value($filter['values']);
         $params = ['nocorrectuseruserid' => $USER->id];
