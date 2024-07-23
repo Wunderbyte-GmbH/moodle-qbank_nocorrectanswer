@@ -149,8 +149,6 @@ class nocorrect_condition extends condition {
      */
     public static function build_query_from_filter(array $filter): array {
         global $DB, $USER;
-
-       // $questions = qbank_nocorrectanswer::get_all_edited_questions($filter);
         $cmid = optional_param('cmid', 0, PARAM_INT);
         $preferencekey = 'qbank_nocorret_'  . $USER->id . '_' . $cmid;
         $selectedoptions = self::get_query_value($filter['values']);
@@ -161,7 +159,6 @@ class nocorrect_condition extends condition {
             $addwhere = ' AND qas.timecreated > :timecreated';
             $params['timecreated'] = $pref;
         }
-
         if (!empty($selectedoptions)) {
             $sqlfraction = '';
             $insql = '';

@@ -75,4 +75,4 @@ $string['correct'] = '{$a} correct';
 $string['pleaseenterpositiveintegerbetween0and100'] = 'Please enter a positive integer between 0 and 100';
 $string['percentagerankmapping'] = 'Percentagerank mapping';
 
-$string['allquestionsanswerd'] = 'All question answered. Feel free to restart.';
+$string['allquestionsanswered'] = 'All question answered. Feel free to restart.';

@@ -74,4 +74,4 @@ $string['correct'] = '{$a} richtige Antwort';
 $string['pleaseenterpositiveintegerbetween0and100'] = 'Bitte eine Zahl zwischen 0 und 100 eingeben';
 $string['percentagerankmapping'] = 'Prozentrang Zuweisung';
 
-$string['allquestionsanswerd'] = 'Sie haben alle Fragen dieser Kategorie beantwortet und können die Simulation gerne noch einmal starten.';
+$string['allquestionsanswered'] = 'Sie haben alle Fragen dieser Kategorie beantwortet und können die Simulation gerne noch einmal starten.';
