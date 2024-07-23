@@ -73,5 +73,9 @@ $string['pleaseenternumber'] = 'Bitte eine Zahl eingeben';
 $string['correct'] = '{$a} richtige Antwort';
 $string['pleaseenterpositiveintegerbetween0and100'] = 'Bitte eine Zahl zwischen 0 und 100 eingeben';
 $string['percentagerankmapping'] = 'Prozentrang Zuweisung';
+$string['percentagerank'] = 'Prozentrang';
+
+$string['meanvaluemapping'] = 'Standardwert Zuweisung';
+$string['meanvalue'] = 'Standardwert';
 
 $string['allquestionsanswered'] = 'Sie haben alle Fragen dieser Kategorie beantwortet und können die Simulation gerne noch einmal starten.';

@@ -64,8 +64,7 @@ if ($form->is_cancelled()) {
     $jsonvalues = json_encode($values);
     set_config($setting, $jsonvalues, $plugin);
     $url = new moodle_url('/question/bank/nocorrectanswer/settingsform.php', ['cmid' => $cmid]);
-    redirect($url);
-
+    redirect($url, $jsonvalues);
     // Provide feedback to the user.
 } else {
     $toform = new stdClass();

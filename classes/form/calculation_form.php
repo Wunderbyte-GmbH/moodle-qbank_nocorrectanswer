@@ -93,7 +93,7 @@ class calculation_form extends moodleform {
         // Add any custom validation rules here
         foreach ($data as $key => $value) {
             if (strpos($key, 'value') || intval($value) < 0 || intval($value) > 100) {
-                $errors[$key] = get_string('pleaseenterpositiveintegerbetween0and100', 'qbank_nocorrctanswer');
+                $errors[$key] = get_string('pleaseenterpositiveintegerbetween0and100', 'qbank_nocorrectanswer');
             }
         }
 

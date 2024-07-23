@@ -49,45 +49,16 @@ function qbank_nocorrectanswer_coursemodule_standard_elements($formwrapper, $mfo
         $mform->addElement('html', '<div class="col-md-9 my-4 mx-4">
         <a href=' . $url->out() . ' class="btn btn-primary">' . get_string('percentagerank', 'qbank_nocorrectanswer'). '</a>
         </div>
-        ', get_string('examplefieldlabel', 'qbank_nocorrectanswer'));
-        $mform->setType('examplefield', PARAM_RAW);
-        // Populate with $mform->setdefault('examplefield', $existing['examplefield']);.
+        ', get_string('percentagerank', 'qbank_nocorrectanswer'));
+        $mform->setType('percentagerank', PARAM_RAW);
+        $mform->addElement('header', 'meanvalue', get_string('meanvalue', 'qbank_nocorrectanswer'));
+        $url = new moodle_url('/question/bank/nocorrectanswer/settingsformst.php', ['cmid' => $cmid]);
+        $mform->addElement('html', '<div class="col-md-9 my-4 mx-4">
+        <a href=' . $url->out() . ' class="btn btn-primary">' . get_string('meanvalue', 'qbank_nocorrectanswer'). '</a>
+        </div>
+        ', get_string('meanvalue', 'qbank_nocorrectanswer'));
+        $mform->setType('meanvalue', PARAM_RAW);
     }
-}
-
-/**
- * Process data from submitted form
- *
- * @param stdClass $data
- * @param stdClass $course
- * @return void
- * See plugin_extend_coursemodule_edit_post_actions in
- * https://github.com/moodle/moodle/blob/master/course/modlib.php
- */
-function qbank_nocorrectanswer_coursemodule_edit_post_actions($data, $course) {
-    // Pull apart $data and insert/update the database table.
-}
-
-/**
- * Validate the data in the new field when the form is submitted
- *
- * @param moodleform_mod $fromform
- * @param array $fields
- * @return void
- */
-function qbank_nocorrectanswer_coursemodule_validation($fromform, $fields) {
-    if (get_class($fromform) == 'mod_quiz_mod_form') {
-        \core\notification::add($fields['examplefield'], \core\notification::INFO);
-    }
-}
-
-function qbank_nocorrectanswer_error_handler($errno, $errstr, $errfile, $errline) {
-    if (strpos($errstr, 'specific error message') !== false) {
-        echo "Oops! A specific error occurred. Please contact support.";
-        debugging("Custom error: [$errno] $errstr in $errfile on line $errline", DEBUG_DEVELOPER);
-        exit();
-    }
-    return false; // Continue with default error handling
 }
 
 function qbank_nocorrectanswer_exception_handler($exception) {
@@ -111,7 +82,6 @@ function qbank_nocorrectanswer_exception_handler($exception) {
 }
 
 function qbank_nocorrectanswer_init() {
-    set_error_handler('qbank_nocorrectanswer_error_handler');
     set_exception_handler('qbank_nocorrectanswer_exception_handler');
 }
 

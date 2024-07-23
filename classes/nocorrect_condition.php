@@ -152,7 +152,6 @@ class nocorrect_condition extends condition {
         $cmid = optional_param('cmid', 0, PARAM_INT);
         $addwhere = '';
 
-
         $selectedoptions = self::get_query_value($filter['values']);
         $params = ['nocorrectuseruserid' => $USER->id];
         if ($cmid) {

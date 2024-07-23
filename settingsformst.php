@@ -43,10 +43,10 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_title(get_string('meanvaluemapping', 'qbank_nocorrectanswer'));
 $PAGE->set_heading(get_string('meanvaluemapping', 'qbank_nocorrectanswer'));
 
-$form = new calculation_form(null, ['cmid' => $cmid]);
+$form = new calculationst_form(null, ['cmid' => $cmid]);
 
 $plugin = 'qbank_nocorrectanwser';
-$setting = 'qbank_questionpercentst_' . $cmid;
+$setting = 'qbank_questionmeanvalu_' . $cmid;
 $numberofquestions  = get_config($plugin, 'qbank_numberofquestions');
 if ($form->is_cancelled()) {
     // Handle form cancel operation, if cancel button is present and pressed
