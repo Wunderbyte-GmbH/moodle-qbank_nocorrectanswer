@@ -45,7 +45,7 @@ $PAGE->set_heading(get_string('percentagerankmapping', 'qbank_nocorrectanswer'))
 
 $form = new calculation_form(null, ['cmid' => $cmid]);
 
-$plugin = 'qbank_nocorrectanwser';
+$plugin = 'qbank_nocorrectanswer';
 $setting = 'qbank_questionpercent_' . $cmid;
 $numberofquestions  = get_config($plugin, 'qbank_numberofquestions');
 if ($form->is_cancelled()) {
@@ -58,7 +58,7 @@ if ($form->is_cancelled()) {
         if ($data->$fieldname) {
             $values[$i] = $data->$fieldname;
         } else {
-            $values[$i] = ''; // or some default value
+            $values[$i] = '0'; // or some default value
         }
     }
     $jsonvalues = json_encode($values);

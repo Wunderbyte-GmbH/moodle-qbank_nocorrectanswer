@@ -45,8 +45,8 @@ $PAGE->set_heading(get_string('meanvaluemapping', 'qbank_nocorrectanswer'));
 
 $form = new calculationst_form(null, ['cmid' => $cmid]);
 
-$plugin = 'qbank_nocorrectanwser';
-$setting = 'qbank_questionmeanvalu_' . $cmid;
+$plugin = 'qbank_nocorrectanswer';
+$setting = 'qbank_questionmeanvalue_' . $cmid;
 $numberofquestions  = get_config($plugin, 'qbank_numberofquestions');
 if ($form->is_cancelled()) {
     // Handle form cancel operation, if cancel button is present and pressed
