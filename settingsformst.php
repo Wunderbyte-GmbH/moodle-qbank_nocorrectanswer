@@ -24,7 +24,7 @@
  */
 
 
-use qbank_nocorrectanswer\form\calculation_form;
+use qbank_nocorrectanswer\form\calculationst_form;
 
 // @codingStandardsIgnoreStart
 // @codingStandardsIgnoreEnd

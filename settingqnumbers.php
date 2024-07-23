@@ -45,7 +45,7 @@ $PAGE->set_heading(get_string('numberofquestions', 'qbank_nocorrectanswer'));
 
 $form = new numberofquestions_form();
 
-$plugin = 'qbank_nocorrectanwser';
+$plugin = 'qbank_nocorrectanswer';
 $setting = 'qbank_numberofquestions';
 
 if ($form->is_cancelled()) {

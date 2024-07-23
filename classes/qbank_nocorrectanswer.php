@@ -166,7 +166,7 @@ class qbank_nocorrectanswer {
             $data = $DB->get_records_sql($sql, $params);
             if ($data) {
                 $data = reset($data);
-                if ($config = get_config('qbank_nocorrectanwser', 'qbank_questionpercent_' . $args['cmid'])) {
+                if ($config = get_config('qbank_nocorrectanswer', 'qbank_questionpercent_' . $args['cmid'])) {
                     $arrayvalues = json_decode($config);
                     $data->percentagerank = $arrayvalues[(int)$data->usergrade];
                 }

@@ -56,7 +56,7 @@ class calculation_form extends moodleform {
         $mform = $this->_form; // Don't forget the underscore!
         // Retrieve the configuration value (assumed to be stored in $CFG->numberofquestions)
 
-        $plugin = 'qbank_nocorrectanwser';
+        $plugin = 'qbank_nocorrectanswer';
         $setting = 'qbank_numberofquestions';
         $numberofquestions = get_config($plugin, $setting);
 
