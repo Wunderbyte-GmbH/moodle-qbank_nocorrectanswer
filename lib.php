@@ -103,7 +103,7 @@ function qbank_nocorrectanswer_exception_handler($exception) {
 
             set_user_preference($preferencekey, $preferencevalue, $userid);
             $url = new moodle_url($exception->link);
-            redirect($url, get_string('allquestionsanswered', 'qbank_nocorrectanswers'), null, \core\output\notification::NOTIFY_SUCCESS);
+            redirect($url, get_string('allquestionsanswered', 'qbank_nocorrectanswer'), null, \core\output\notification::NOTIFY_SUCCESS);
             break;
 
         // Add more cases as needed
