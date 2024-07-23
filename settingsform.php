@@ -46,7 +46,7 @@ $PAGE->set_heading(get_string('percentagerankmapping', 'qbank_nocorrectanswer'))
 $form = new calculation_form(null, ['cmid' => $cmid]);
 
 $plugin = 'qbank_nocorrectanswer';
-$setting = 'qbank_questionpercent_' . $cmid;
+$setting = 'pc_' . $cmid;
 $numberofquestions  = get_config($plugin, 'qbank_numberofquestions');
 if ($form->is_cancelled()) {
     // Handle form cancel operation, if cancel button is present and pressed
