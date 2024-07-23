@@ -67,3 +67,12 @@ $string['performanceoverview_average_total'] = 'Average value of the comparison 
 $string['performanceoverview_max_total'] = 'Maximum score of the comparison group';
 $string['performanceoverview_testvalue'] = 'Test value';
 $string['performanceoverview_percentage'] = 'Percentage rank';
+
+// Settings.
+$string['numberofquestions'] = 'Number of Questions';
+$string['pleaseenternumber'] = 'Please enter a number';
+$string['correct'] = '{$a} correct';
+$string['pleaseenterpositiveintegerbetween0and100'] = 'Please enter a positive integer between 0 and 100';
+$string['percentagerankmapping'] = 'Percentagerank mapping';
+
+$string['allquestionsanswerd'] = 'All question answered. Feel free to restart.';

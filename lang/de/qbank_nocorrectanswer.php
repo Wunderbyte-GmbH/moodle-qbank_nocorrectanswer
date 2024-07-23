@@ -66,3 +66,12 @@ $string['performanceoverview_average_total'] = 'Mittelwert der Vergleichsgruppe'
 $string['performanceoverview_max_total'] = 'Maximale Punktzahl der Vergleichsgruppe';
 $string['performanceoverview_testvalue'] = 'Testwert';
 $string['performanceoverview_percentage'] = 'Prozentrang';
+
+// Settings.
+$string['numberofquestions'] = 'Anzahl der Fragen';
+$string['pleaseenternumber'] = 'Bitte eine Zahl eingeben';
+$string['correct'] = '{$a} richtige Antwort';
+$string['pleaseenterpositiveintegerbetween0and100'] = 'Bitte eine Zahl zwischen 0 und 100 eingeben';
+$string['percentagerankmapping'] = 'Prozentrang Zuweisung';
+
+$string['allquestionsanswerd'] = 'Sie haben alle Fragen dieser Kategorie beantwortet und können die Simulation gerne noch einmal starten.';

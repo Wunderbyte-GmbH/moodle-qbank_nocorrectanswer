@@ -75,4 +75,16 @@ class renderer extends plugin_renderer_base {
         $o .= $this->render_from_template('qbank_nocorrectanswer/performanceoverview', $data);
         return $o;
     }
+
+        /**
+     * Function to print html qoverview
+     * @param performanceoverview $data
+     * @return string
+     */
+    public function render_congratulations(congratulations $data) {
+        $o = '';
+        $data = $data->export_for_template($this);
+        $o .= $this->render_from_template('qbank_nocorrectanswer/congratulations', $data);
+        return $o;
+    }
 }

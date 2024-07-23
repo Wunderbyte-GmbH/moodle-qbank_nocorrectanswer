@@ -50,8 +50,8 @@ class qbank_nocorrectanswer {
         $where = '';
 
         if (isset($args['qcatid'])) {
-            $where = " WHERE qbe.questioncategoryid = :qcatid";
-            $params['qcatid'] = $args['qcatid'];
+             $where = " WHERE qbe.questioncategoryid = :qcatid";
+             $params['qcatid'] = $args['qcatid'];
         }
         $sql = self::build_question_sql($select, $where);
 
@@ -90,6 +90,7 @@ class qbank_nocorrectanswer {
         $params = array_merge($params, $inparams);
         $subwhere .= $insql;
 
+        $args = null;
         if (isset($args['cmid'])) {
             $subwhere .= " AND c.instanceid = :cinstanceid";
             $params['cinstanceid'] = $args['cmid'];
@@ -165,6 +166,10 @@ class qbank_nocorrectanswer {
             $data = $DB->get_records_sql($sql, $params);
             if ($data) {
                 $data = reset($data);
+                if ($config = get_config('qbank_nocorrectanwser', 'qbank_questionpercent_' . $args['cmid'])) {
+                    $arrayvalues = json_decode($config);
+                    $data->percentagerank = $arrayvalues[(int)$data->usergrade];
+                }
                 $data->usersumgrade = round($data->usersumgrade ?? 0, 2);
                 $data->usergrade = round($data->usergrade ?? 0, 2);
                 $data->sumgrades = round($data->sumgrades ?? 0, 2);

@@ -28,8 +28,22 @@ defined('MOODLE_INTERNAL') || die();
 if ($hassiteconfig) {
     $settings = new admin_settingpage('qbank_nocorrectanswer_settings', new lang_string('pluginname', 'qbank_nocorrectanswer'));
 
+    $url = new moodle_url('/question/bank/nocorrectanswer/nocorrectanswer_percentage.php', ['section' => 'columnsortorder']);
+
     // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
     if ($ADMIN->fulltree) {
-        // TODO: Define actual plugin settings page and add it to the tree - {@link https://docs.moodle.org/dev/Admin_settings}.
+        $page = $adminroot->locate('manageqbanks');
+        if (isset($page)) {
+            $page->add(new admin_setting_description(
+                'manageqbanksgotocolumnsort',
+                '',
+                new lang_string(
+                    'qbankgotocolumnsort',
+                    'qbank_columnsortorder',
+                    html_writer::link($url, get_string('qbankcolumnsortorder', 'qbank_columnsortorder')))
+            ));
+        }
     }
+    // Column sort order link in admin page.
+    $settings = new admin_externalpage('qbank_nocorrectanswer_settings', get_string('qbankcolumnsortorder', 'qbank_columnsortorder'), $url);
 }

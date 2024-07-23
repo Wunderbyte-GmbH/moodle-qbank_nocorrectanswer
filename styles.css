@@ -153,3 +153,16 @@
   margin-right: 10px;
   font-size: 3em;
 }
+
+.btn-collapse[aria-expanded="true"] .fa-chevron-down {
+  display: none;
+}
+.btn-collapse[aria-expanded="true"] .fa-chevron-up {
+  display: inline;
+}
+.btn-collapse[aria-expanded="false"] .fa-chevron-down {
+  display: inline;
+}
+.btn-collapse[aria-expanded="false"] .fa-chevron-up {
+  display: none;
+}

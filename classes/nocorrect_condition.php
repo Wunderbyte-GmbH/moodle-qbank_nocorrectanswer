@@ -18,6 +18,8 @@ namespace qbank_nocorrectanswer;
 
 use core\output\datafilter;
 use core_question\local\bank\condition;
+use qubaid_list;
+
 
 /**
  * Question bank search class to allow searching/filtering by tags on a question.
@@ -64,6 +66,7 @@ class nocorrect_condition extends condition {
         if (is_null($qbank)) {
             return;
         }
+
         parent::__construct($qbank);
         $cat = $qbank->get_pagevars('cat');
         if (is_array($cat)) {
@@ -101,7 +104,7 @@ class nocorrect_condition extends condition {
      * @param array $filter filter properties
      * @return array where sql and params
      */
-    public static function build_query_from_filter(array $filter): array {
+    public static function build_query_from_filterold(array $filter): array {
         global $DB, $USER;
 
         $selectedoptions = self::get_query_value($filter['values']);
@@ -135,6 +138,58 @@ class nocorrect_condition extends condition {
                 WHERE qas.userid=:nocorrectuseruserid AND qas.state = 'gradedright'
             )";
         }
+        return [$where, $params];
+    }
+
+    /**
+     * Build query from filter value
+     *
+     * @param array $filter filter properties
+     * @return array where sql and params
+     */
+    public static function build_query_from_filter(array $filter): array {
+        global $DB, $USER;
+
+       // $questions = qbank_nocorrectanswer::get_all_edited_questions($filter);
+        $cmid = required_param('cmid', PARAM_INT);
+        $preferencekey = 'qbank_nocorret_'  . $USER->id . '_' . $cmid;
+        $selectedoptions = self::get_query_value($filter['values']);
+        $params = ['nocorrectuseruserid' => $USER->id];
+        $where = '';
+        $addwhere = '';
+        if (!empty($pref = get_user_preferences($preferencekey))) {
+            $addwhere = ' AND qas.timecreated > :timecreated';
+            $params['timecreated'] = $pref;
+        }
+
+        if (!empty($selectedoptions)) {
+            $sqlfraction = '';
+            $insql = '';
+            if (!empty($selectedoptions['fraction'])) {
+                $sqlfraction = ' AND qas.fraction IS NULL';
+            }
+            if (!empty($selectedoptions['in'])) {
+                $jointype = $filter['jointype'] ?? self::JOINTYPE_DEFAULT;
+                $equal = !($jointype === datafilter::JOINTYPE_NONE);
+                [$insql, $inparams] = $DB->get_in_or_equal($selectedoptions['in'], SQL_PARAMS_NAMED, 'param', $equal);
+                $insql = ' AND qas.state ' . $insql;
+                $params = array_merge($params, $inparams);
+            }
+            $where = "q.id NOT IN (
+                SELECT qa.questionid
+                FROM {question_attempt_steps} qas
+                JOIN {question_attempts} qa ON qa.id=qas.questionattemptid
+                WHERE qas.userid=:nocorrectuseruserid" . $sqlfraction  . $insql . $addwhere . ")";
+        } else {
+            // If there are no selected options, use the default query.
+            $where = "q.id NOT IN (
+                SELECT qa.questionid
+                FROM {question_attempt_steps} qas
+                JOIN {question_attempts} qa ON qa.id=qas.questionattemptid
+                WHERE qas.userid=:nocorrectuseruserid AND qas.state = 'gradedright' $addwhere
+            )";
+        }
+
         return [$where, $params];
     }
 
