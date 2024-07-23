@@ -108,14 +108,7 @@ function qbank_nocorrectanswer_exception_handler($exception) {
 
         // Add more cases as needed
         default:
-            if ($msg == 'specific exception message') {
-                echo "Oops! A specific exception occurred. Please contact support.";
-                debugging("Custom exception: " . $exception->getMessage(), DEBUG_DEVELOPER);
-                exit();
-            } else {
-                echo "An unexpected error occurred. Please try again later.";
-                debugging("Uncaught exception: " . $exception->getMessage(), DEBUG_DEVELOPER);
-            }
+            default_exception_handler($exception);
             break;
     }
 }
