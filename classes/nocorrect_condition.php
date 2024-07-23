@@ -150,15 +150,20 @@ class nocorrect_condition extends condition {
     public static function build_query_from_filter(array $filter): array {
         global $DB, $USER;
         $cmid = optional_param('cmid', 0, PARAM_INT);
-        $preferencekey = 'qbank_nocorret_'  . $USER->id . '_' . $cmid;
+        $addwhere = '';
+
+
         $selectedoptions = self::get_query_value($filter['values']);
         $params = ['nocorrectuseruserid' => $USER->id];
-        $where = '';
-        $addwhere = '';
-        if (!empty($pref = get_user_preferences($preferencekey))) {
-            $addwhere = ' AND qas.timecreated > :timecreated';
-            $params['timecreated'] = $pref;
+        if ($cmid) {
+            $preferencekey = 'qbank_nocorrect_'  . $USER->id . '_' . $cmid;
+            if (!empty($pref = get_user_preferences($preferencekey))) {
+                $addwhere = ' AND qas.timecreated > :timecreated';
+                $params['timecreated'] = $pref;
+            }
         }
+        $where = '';
+
         if (!empty($selectedoptions)) {
             $sqlfraction = '';
             $insql = '';

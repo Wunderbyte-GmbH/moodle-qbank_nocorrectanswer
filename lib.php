@@ -93,14 +93,11 @@ function qbank_nocorrectanswer_error_handler($errno, $errstr, $errfile, $errline
 function qbank_nocorrectanswer_exception_handler($exception) {
     global $OUTPUT, $PAGE, $CFG, $USER;
     $msg = $exception->getMessage();
-    $errorcode = $exception->errorcode;
-    switch ($errorcode) {
+    switch ($exception->errorcode) {
         case 'notenoughrandomquestions':
-            $categoryid = $exception->a->category;
             $userid = $USER->id;
-            $preferencekey = 'qbank_nocorret_'  . $USER->id . '_' . $exception->a->filtercondition['cmid'];
+            $preferencekey = 'qbank_nocorrect_'  . $USER->id . '_' . $exception->a->filtercondition['cmid'];
             $preferencevalue = time();
-
             set_user_preference($preferencekey, $preferencevalue, $userid);
             $url = new moodle_url($exception->link);
             redirect($url, get_string('allquestionsanswered', 'qbank_nocorrectanswer'), null, \core\output\notification::NOTIFY_SUCCESS);
