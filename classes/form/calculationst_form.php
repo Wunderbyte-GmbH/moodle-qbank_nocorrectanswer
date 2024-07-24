@@ -91,11 +91,11 @@ class calculationst_form extends moodleform {
         $errors = parent::validation($data, $files);
 
         // Add any custom validation rules here
-        foreach ($data as $key => $value) {
-            if (strpos($key, 'value') || intval($value) < 0 || intval($value) > 100) {
-                $errors[$key] = get_string('pleaseenterpositiveintegerbetween0and100', 'qbank_nocorrectanswer');
-            }
-        }
+        // foreach ($data as $key => $value) {
+        //     if (strpos($key, 'value') || intval($value) < 0 || intval($value) > 100) {
+        //         $errors[$key] = get_string('pleaseenterpositiveintegerbetween0and100', 'qbank_nocorrectanswer');
+        //     }
+        // }
 
         return $errors;
     }

@@ -43,7 +43,7 @@ $PAGE->set_context(context_system::instance());
 $PAGE->set_title(get_string('percentagerankmapping', 'qbank_nocorrectanswer'));
 $PAGE->set_heading(get_string('percentagerankmapping', 'qbank_nocorrectanswer'));
 
-$form = new calculation_form(null, ['cmid' => $cmid]);
+$form = new calculation_form(null, ['cmid' => $cmid], 'get');
 
 $plugin = 'qbank_nocorrectanswer';
 $setting = 'pc_' . $cmid;
@@ -51,19 +51,18 @@ $numberofquestions  = get_config($plugin, 'qbank_numberofquestions');
 if ($form->is_cancelled()) {
     // Handle form cancel operation, if cancel button is present and pressed
 } else if ($data = $form->get_data()) {
-
     $values = [];
     for ($i = 0; $i < $numberofquestions; $i++) {
         $fieldname = 'value' . $i;
         if ($data->$fieldname) {
             $values[$i] = $data->$fieldname;
         } else {
-            $values[$i] = '0'; // or some default value
+            $values[$i] = 0; // or some default value
         }
     }
     $jsonvalues = json_encode($values);
     set_config($setting, $jsonvalues, $plugin);
-    $url = new moodle_url('/question/bank/nocorrectanswer/settingsform.php', ['cmid' => $cmid]);
+    $url = new moodle_url('/question/bank/nocorrectanswer/settingsform.php', ['cmid' => $data->cmid]);
     redirect($url, $jsonvalues);
     // Provide feedback to the user.
 } else {
@@ -85,7 +84,8 @@ if ($form->is_cancelled()) {
     $form->set_data($toform);
     // Form didn't validate or this is the first display
     // Display the form
-    echo $OUTPUT->header();
-    $form->display();
-    echo $OUTPUT->footer();
+
 }
+echo $OUTPUT->header();
+$form->display();
+echo $OUTPUT->footer();

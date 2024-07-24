@@ -60,8 +60,5 @@ if ($form->is_cancelled()) {
     $form->set_data($toform);
 }
 echo $OUTPUT->header();
-
-echo get_config($plugin, $setting);
 $form->display();
-
 echo $OUTPUT->footer();

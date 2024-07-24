@@ -73,9 +73,9 @@ class numberofquestions_form extends moodleform {
         $errors = parent::validation($data, $files);
 
         // Ensure the number of questions is a positive integer
-        if (isset($data['numberofquestions']) && (!is_numeric($data['numberofquestions']) || intval($data['numberofquestions']) <= 0)) {
-            $errors['numberofquestions'] = get_string('pleaseenterpositiveinteger', 'qbank_nocorrectanswere');
-        }
+        // if (isset($data['numberofquestions']) && (!is_numeric($data['numberofquestions']) || intval($data['numberofquestions']) <= 0)) {
+        //     $errors['numberofquestions'] = get_string('pleaseenterpositiveinteger', 'qbank_nocorrectanswere');
+        // }
 
         return $errors;
     }

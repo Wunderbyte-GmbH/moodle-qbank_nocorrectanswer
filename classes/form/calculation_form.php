@@ -66,7 +66,7 @@ class calculation_form extends moodleform {
 
         // Generate text fields based on configuration value
         for ($i = 0; $i < $numberofquestions; $i++) {
-            $mform->addElement('text', 'value' . $i, get_string('correct', 'qbank_nocorrectanswer', $i));
+            $mform->addElement('text', 'value' . $i, get_string('correct', 'qbank_nocorrectanswer', $i), 0);
             $mform->setType('value' . $i, PARAM_INT); // Ensure the value is treated as an integer
             $mform->addRule('value' . $i, get_string('pleaseenternumber', 'qbank_nocorrectanswer'), 'numeric', null, 'client');
         }
@@ -91,11 +91,11 @@ class calculation_form extends moodleform {
         $errors = parent::validation($data, $files);
 
         // Add any custom validation rules here
-        foreach ($data as $key => $value) {
-            if (strpos($key, 'value') || intval($value) < 0 || intval($value) > 100) {
-                $errors[$key] = get_string('pleaseenterpositiveintegerbetween0and100', 'qbank_nocorrectanswer');
-            }
-        }
+        // foreach ($data as $key => $value) {
+        //     if (strpos($key, 'value') || intval($value) < 0 || intval($value) > 100) {
+        //         $errors[$key] = get_string('pleaseenterpositiveintegerbetween0and100', 'qbank_nocorrectanswer');
+        //     }
+        // }
 
         return $errors;
     }

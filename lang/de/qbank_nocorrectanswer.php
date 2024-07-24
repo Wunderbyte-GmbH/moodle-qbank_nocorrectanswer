@@ -32,7 +32,7 @@ $string['repeat_wrong_btn'] = "Falsche wiederholen";
 $string['edited_questions'] = '{$a->edit} von {$a->absolute} bearbeitet';
 $string['correct_questions'] = '{$a->correct} von {$a->edit} korrekt';
 $string['wrong_questions'] = '{$a->wrong} von {$a->edit} falsch';
-$string['questions_statistic'] = 'Fragen-Statistik';
+$string['questions_statistic'] = 'Auswertung-Fragen';
 
 // Shortcodes.
 $string['correctanswers'] = "Zeige die richtig beantworteten Fragen des aktuellen Benutzers an";
@@ -45,7 +45,8 @@ $string['resultoverview_first_result'] = "Originale Übung";
 $string['resultoverview_current_values'] = "Deine aktuellsten Werte";
 $string['resultoverview_points'] = 'Punkte:';
 $string['resultoverview_from'] = 'von';
-$string['resultoverview_percentage'] = 'Prozentrangwert: ';
+$string['resultoverview_percentage'] = 'Prozentwert: ';
+$string['resultoverview_percentagerank'] = 'Prozentrangwert: ';
 $string['resultoverview_test_value'] = 'Testwert (Standardwert): ';
 $string['resultoverview_average'] = 'Durchschnittliche Punktzahl: ';
 $string['resultoverview_max'] = 'Maximale Punktzahl: ';

@@ -166,9 +166,13 @@ class qbank_nocorrectanswer {
             $data = $DB->get_records_sql($sql, $params);
             if ($data) {
                 $data = reset($data);
-                if ($config = get_config('qbank_nocorrectanswer', 'qbank_questionpercent_' . $args['cmid'])) {
+                if ($config = get_config('qbank_nocorrectanswer', 'pc_' . $args['cmid'])) {
                     $arrayvalues = json_decode($config);
                     $data->percentagerank = $arrayvalues[(int)$data->usergrade];
+                }
+                if ($config = get_config('qbank_nocorrectanswer', 'mv_' . $args['cmid'])) {
+                    $arrayvalues = json_decode($config);
+                    $data->meanvalue = $arrayvalues[(int)$data->usergrade];
                 }
                 $data->usersumgrade = round($data->usersumgrade ?? 0, 2);
                 $data->usergrade = round($data->usergrade ?? 0, 2);

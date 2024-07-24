@@ -46,8 +46,27 @@
                 </p>
                 <p>{{strings.resultoverview_percentage}}<span class="qbank_nocorrectanswer_number">{{lastquiz.percentage}}</span></p>
                 <p>{{strings.resultoverview_percentagerank}}<span class="qbank_nocorrectanswer_number">{{lastquiz.percentagerank}}</span></p>
-                <p>{{strings.resultoverview_test_value}}<span class="qbank_nocorrectanswer_number">{{lastquiz.meanvalue}}</span></p>
+                <p>{{strings.resultoverview_test_value}}<span class="qbank_nocorrectanswer_number">100</span></p>
                 <p>{{strings.resultoverview_average}}<span class="qbank_nocorrectanswer_number">{{lastquiz.avg_user_sumgrades}}</span></p>
+                <p>{{strings.resultoverview_max}}<span class="qbank_nocorrectanswer_number">{{lastquiz.max_user_sumgrades}}</span></p>
+                <div class="qbank_nocorrectanswer_heading">
+                    <span>
+                        <button class="btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#performance_comparison" aria-expanded="false">
+                            <i class="fa fa-chevron-down"></i>
+                            <i class="fa fa-chevron-up"></i>
+                        </button>
+                    </span>
+                    {{strings.resultoverview_compare}}
+                </div>
+                <div id="performance_comparison" class="collapse">
+                <p>{{strings.resultoverview_total}}<span class="qbank_nocorrectanswer_number"> {{averagequiz.num_participants}}</span></p>
+                <p>{{strings.resultoverview_average_total}}<span class="qbank_nocorrectanswer_number"> {{lastquiz.avg_total_sumgrades}}</span></p>
+                <p>{{strings.resultoverview_max_total}}<span class="qbank_nocorrectanswer_number"> {{lastquiz.max_total_sumgrades}}</span></p>
+                <p class="qbank_nocorrectanswer_small-text">{{strings.resultoverview_information}}</p>
+                </div>
+            </div>
+            <div class="qbank_nocorrectanswer_repeat-button">
+                <button class="qbank_nocorrectanswer_btn">{{strings.resultoverview_performance}}</button>
             </div>
         </div>
     </div>
