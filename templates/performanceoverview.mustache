@@ -42,9 +42,9 @@
     </h6>
 </div>
 <div id="performanceoverview_performance" class="qbank_nocorrectanswer_question-statistics-container collapse">
-
-    <div class="qbank_nocorrectanswer_results-overview">
+    <div class="qbank_nocorrectanswer_results-overview row">
         {{#lastpiechart}}
+        <div class="col-md-6">
             <div class="qbank_nocorrectanswer_results-card">
                 <h6>{{strings.performanceoverview_performance}}</h6>
                 <div class="qbank_nocorrectanswer_chart-image">
@@ -57,22 +57,27 @@
                     </span>
                 </div>
             </div>
-            {{/lastpiechart}}
+        </div>
+        {{/lastpiechart}}
         {{#fivepiechart}}
-        <div class="qbank_nocorrectanswer_results-card">
-            <h6>{{strings.performanceoverview_average}}</h6>
-            <div class="qbank_nocorrectanswer_chart-image">
-                {{{fivepiechart}}}
-                <span class="qbank_nocorrectanswer_number">
-                  {{lastfivequiz}}
-                </span> {{strings.performanceoverview_from}}
-                <span class="qbank_nocorrectanswer_number">
-                  {{lastquiz.grade}}
-                  {{strings.performanceoverview_points}}
-                </span>
+        <div class="col-md-6">
+            <div class="qbank_nocorrectanswer_results-card">
+                <h6>{{strings.performanceoverview_average}}</h6>
+                <div class="qbank_nocorrectanswer_chart-image">
+                    {{{fivepiechart}}}
+                    <span class="qbank_nocorrectanswer_number">
+                    {{lastfivequiz}}
+                    </span> {{strings.performanceoverview_from}}
+                    <span class="qbank_nocorrectanswer_number">
+                    {{lastquiz.grade}}
+                    {{strings.performanceoverview_points}}
+                    </span>
+                </div>
             </div>
         </div>
         {{/fivepiechart}}
+    </div>
+    <div class="row mt-4">
         <div>
             <h6>
                 <span>
@@ -84,41 +89,55 @@
                 </span>
             </h6>
         </div>
+    </div>
         <div id="performanceoverview_performance_comparison" class="qbank_nocorrectanswer_question-statistics-container collapse">
-        <div class="qbank_nocorrectanswer_comparison-text">{{strings.performanceoverview_current}}</div>
-        <div class="qbank_nocorrectanswer_results-card">
-            <h6>{{strings.performanceoverview_average_total}}</h6>
-            <div class='qbank_nocorrectanswer_icon_value'>
-                <i class="fas fa-tachometer-average"></i>
-                <span class="qbank_nocorrectanswer_number">
-                  {{lastquiz.avg_total_sumgrades}}
-                </span>
+            <div class="row mb-2">
+                <div class="col-md-12">
+                    <div class="qbank_nocorrectanswer_comparison-text">{{strings.performanceoverview_current}}</div>
+                </div>
             </div>
-        </div>
-        <div class="qbank_nocorrectanswer_results-card">
-            <h6>{{strings.performanceoverview_max_total}}</h6>
-            <div class='qbank_nocorrectanswer_icon_value'>
-                <i class="fa fa-star"></i>
-                <span class="qbank_nocorrectanswer_number">
-                  {{lastquiz.max_total_sumgrades}}
-                </span>
-            </div>
-        </div>
-        <div class="qbank_nocorrectanswer_results-card">
-            <h6>{{strings.performanceoverview_testvalue}}</h6>
-            <div class='qbank_nocorrectanswer_icon_value'>
-                <i class="fa-solid fa-chart-column"></i>
-                <span class="qbank_nocorrectanswer_number">100</span>
-            </div>
-        </div>
-        <div class="qbank_nocorrectanswer_results-card">
-            <h6>{{strings.performanceoverview_percentage}}</h6>
-            <div class='qbank_nocorrectanswer_icon_value'>
-                <i class="fa-solid fa-people-group"></i>
-                <span class="qbank_nocorrectanswer_number">100 %</span>
+            <div class="row mb-2 h-100">
+                <div class="col-md-3 d-flex">
+                    <div class="qbank_nocorrectanswer_results-card h-100 flex-grow-1">
+                        <h6>{{strings.performanceoverview_average_total}}</h6>
+                        <div class='qbank_nocorrectanswer_icon_value'>
+                            <i class="fas fa-tachometer-average"></i>
+                            <span class="qbank_nocorrectanswer_number">
+                            {{lastquiz.avg_total_sumgrades}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex">
+                    <div class="qbank_nocorrectanswer_results-card h-100 flex-grow-1">
+                        <h6>{{strings.performanceoverview_max_total}}</h6>
+                        <div class='qbank_nocorrectanswer_icon_value'>
+                            <i class="fa fa-star"></i>
+                            <span class="qbank_nocorrectanswer_number">
+                            {{lastquiz.max_total_sumgrades}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex">
+                    <div class="qbank_nocorrectanswer_results-card h-100 flex-grow-1">
+                        <h6>{{strings.performanceoverview_testvalue}}</h6>
+                        <div class='qbank_nocorrectanswer_icon_value'>
+                            <i class="fa-solid fa-chart-column"></i>
+                            <span class="qbank_nocorrectanswer_number">100</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex">
+                    <div class="qbank_nocorrectanswer_results-card h-100 flex-grow-1">
+                        <h6>{{strings.performanceoverview_percentage}}</h6>
+                        <div class='qbank_nocorrectanswer_icon_value'>
+                            <i class="fa-solid fa-people-group"></i>
+                            <span class="qbank_nocorrectanswer_number">100 %</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-</div>
-

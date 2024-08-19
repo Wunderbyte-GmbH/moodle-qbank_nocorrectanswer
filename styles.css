@@ -9,7 +9,6 @@
 }
 
 .qbank_nocorrectanswer_question-statistics-container {
-  display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem;
@@ -18,9 +17,9 @@
 .qbank_nocorrectanswer_card {
   background-color: #f9f9f9;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   text-align: left;
+  border: 2px solid #000;
   width: 100%;
   max-width: 500px;
 }
@@ -107,19 +106,19 @@
   margin-bottom: 10px;
 }
 
-.qbank_nocorrectanswer_results-overview {
+/* .qbank_nocorrectanswer_results-overview {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-}
+} */
 
 .qbank_nocorrectanswer_results-card {
   background-color: #f9f9f9;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #000;
   padding: 20px;
   text-align: center;
 }
@@ -166,3 +165,4 @@
 .btn-collapse[aria-expanded="false"] .fa-chevron-up {
   display: none;
 }
+

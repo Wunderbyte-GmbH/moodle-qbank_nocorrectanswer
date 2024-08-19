@@ -36,18 +36,37 @@
         </div>
         <div class="qbank_nocorrectanswer_card-body">
             <div class="qbank_nocorrectanswer_statistics">
-                <div class="qbank_nocorrectanswer_heading">{{strings.resultoverview_last_result}}</div>
-                <p>{{lastquiz.name}}</p>
                 <div class="qbank_nocorrectanswer_heading">{{strings.resultoverview_current_values}}</div>
                 <p>{{strings.resultoverview_points}}
                   <span class="qbank_nocorrectanswer_number">{{lastquiz.usergrade}}</span>
                   {{strings.resultoverview_from}}
                   <span class="qbank_nocorrectanswer_number">{{lastquiz.grade}}</span>
                 </p>
-                <p>{{strings.resultoverview_percentage}}<span class="qbank_nocorrectanswer_number">{{lastquiz.percentage}} % </span></p>
-                <p>{{strings.resultoverview_percentagerank}}<span class="qbank_nocorrectanswer_number">{{lastquiz.percentagerank}}</span></p>
-                <p>{{strings.resultoverview_test_value}}<span class="qbank_nocorrectanswer_number">{{lastquiz.meanvalue}}</span></p>
-                <p>{{strings.resultoverview_average}}<span class="qbank_nocorrectanswer_number">{{lastquiz.avg_user_sumgrades}}</span></p>
+                <p>{{strings.resultoverview_percentage}}<span class="qbank_nocorrectanswer_number">{{lastquiz.percentage}} % </span>
+                    {{#lastquiz.showinfo}}
+                    <a class="btn btn-link p-0 float-right" role="button" data-container="body" data-toggle="popover" data-placement="right"
+                    data-content="{{{strings.questionsinfo_percentage}}}" data-html="true" tabindex="0" data-trigger="focus" aria-label="Hilfe" data-original-title="" title="" >
+                    <i class="icon fa fa-question-circle text-info fa-fw m-0" title="Punkteinfo" role="img" aria-label="Punkteinfo"></i>
+                    </a>
+                    {{/lastquiz.showinfo}}
+                </p>
+                <p>{{strings.resultoverview_percentagerank}}<span class="qbank_nocorrectanswer_number">{{lastquiz.percentagerank}}</span>
+                    {{#lastquiz.showinfo}}
+                    <a class="btn btn-link p-0 float-right" role="button" data-container="body" data-toggle="popover" data-placement="right"
+                    data-content="{{{strings.questionsinfo_percentagerank}}}" data-html="true" tabindex="0" data-trigger="focus" aria-label="Hilfe" data-original-title="" title="" >
+                    <i class="icon fa fa-question-circle text-info fa-fw m-0" title="Punkteinfo" role="img" aria-label="Punkteinfo"></i>
+                    </a>
+                    {{/lastquiz.showinfo}}
+                </p>
+                <p>{{strings.resultoverview_test_value}}<span class="qbank_nocorrectanswer_number">{{lastquiz.meanvalue}}</span>
+                    {{#lastquiz.showinfo}}
+                    <a class="btn btn-link p-0 float-right" role="button" data-container="body" data-toggle="popover" data-placement="right"
+                    data-content="{{{strings.questionsinfo_test_value}}}" data-html="true" tabindex="0" data-trigger="focus" aria-label="Hilfe" data-original-title="" title="" >
+                    <i class="icon fa fa-question-circle text-info fa-fw m-0" title="Punkteinfo" role="img" aria-label="Punkteinfo"></i>
+                    </a>
+                    {{/lastquiz.showinfo}}
+                </p>
+                <!-- <p>{{strings.resultoverview_average}}<span class="qbank_nocorrectanswer_number">{{lastquiz.avg_user_sumgrades}}</span></p> -->
             </div>
         </div>
     </div>

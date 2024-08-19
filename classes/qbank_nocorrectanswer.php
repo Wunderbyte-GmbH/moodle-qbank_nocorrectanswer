@@ -25,6 +25,7 @@
  */
 
 namespace qbank_nocorrectanswer;
+use stdClass;
 
 /**
  * Deals with local_shortcodes regarding booking.
@@ -185,6 +186,9 @@ class qbank_nocorrectanswer {
                 $data->percentage = round((($data->usergrade ?? 0) / ($data->grade ?? 1)) * 100, 2);
             }
         }
+        if (isset($args['showinfo'])) {
+            $data->showinfo = true;
+        }
         return $data;
     }
 
@@ -257,7 +261,7 @@ class qbank_nocorrectanswer {
                 qg.grade AS usergrade,
                 q.sumgrades  AS sumgrades,
                 q.grade AS grade ";
-            $sql = self::build_quiz_sql($select, 5);
+            $sql = self::build_quiz_sql($select, 4);
             $results = $DB->get_records_sql($sql, $params);
             $sumgrade = 0;
             foreach ($results as $result) {
@@ -265,9 +269,105 @@ class qbank_nocorrectanswer {
                 $sumgrade = $result->sumgrades;
             }
             if ($results) {
-                $average = $average * $sumgrade / count($results);
+                $average = $average / count($results);
             }
         }
         return (int) $average;
+    }
+
+    /**
+     * Summary of get_all_quizzes_from_course
+     * @param mixed $args
+     * @return stdClass
+     */
+    public static function get_all_quizzes_from_course($args) {
+        if (isset($args['courseid'])) {
+            global $USER, $DB;
+            $params = [
+                'useridq' => $USER->id,
+                'userid' => $USER->id,
+                'courseid' => $args['courseid'],
+            ];
+            // Get max points from quizzes and divide trough points.
+            $select = "    SELECT
+                q.id AS quizid,
+                q.name AS quizname,
+                q.grade AS maxpoints,
+                gg.finalgrade AS usergrade,
+                c.id AS courseid,
+                c.fullname AS coursename,
+                gi.id AS gradeitemid,
+                gg.finalgrade / q.grade AS gradefraction,
+                qa.timefinish
+            FROM
+                {quiz} q
+            JOIN
+                {course} c ON c.id = q.course
+            LEFT JOIN
+                {quiz_attempts} qa ON qa.quiz = q.id AND qa.userid = :useridq
+            LEFT JOIN
+                {grade_items} gi ON gi.iteminstance = q.id AND gi.itemmodule = 'quiz'
+            LEFT JOIN
+                {grade_grades} gg ON gg.itemid = gi.id AND gg.userid = :userid
+            WHERE
+                c.id = :courseid
+            ORDER BY
+                COALESCE(qa.timefinish, 0) DESC,
+                gi.id
+            ";
+
+            $results = $DB->get_records_sql($select, $params);
+            $data = new stdClass();
+            $data->quizstatistic = new stdClass();
+            $sumgrade = 0;
+            $lastattempt = 0;
+            $lastquiz = new stdClass();
+
+            foreach ($results as $result) {
+                // firstquiz
+                if (!$lastattempt && $result->timefinish) {
+                    $lastquiz->maxpoints = $result->maxpoints;
+                    $lastquiz->usergrade = $result->usergrade;
+                    if (isset($args['refcmid'])) {
+                        if ($config = get_config('qbank_nocorrectanswer', 'pc_' . $args['refcmid'])) {
+                            $arrayvalues = json_decode($config);
+                            $lastquiz->percentagerank = $arrayvalues[(int)$data->usergrade];
+                        }
+                        if ($config = get_config('qbank_nocorrectanswer', 'mv_' . $args['refcmid'])) {
+                            $arrayvalues = json_decode($config);
+                            $lastquiz->meanvalue = $arrayvalues[(int)$data->usergrade];
+                        }
+                    }
+                }
+                $average += $result->usersumgrade;
+                $sumgrade = $result->sumgrades;
+                $maxpoints += $result->maxpoints;
+                $userpoints += $result->usergrade;
+                if ($result->usergrade) {
+                    $data->quizstatistic->maxpoints += $result->maxpoints;
+                    $data->quizstatistic->usergrade  += $result->usergrade;
+                }
+
+            }
+            if ($results) {
+                $average = $average * $sumgrade / count($results);
+            }
+
+            // Coursestatistic.
+            $data->average = $average;
+            $data->sumgrades = $sumgrade;
+            $data->maxpoints = $maxpoints;
+            $data->userpoints = $userpoints;
+
+            // Last Quiz statistic.
+            $data->lastquiz = $lastquiz;
+
+            // Last 4 Quizstatistic
+            $data->quizzes = $results;
+
+
+        }
+        $quizzes = $results;
+        return $data;
     }
 }

@@ -76,7 +76,7 @@ class renderer extends plugin_renderer_base {
         return $o;
     }
 
-        /**
+    /**
      * Function to print html qoverview
      * @param performanceoverview $data
      * @return string

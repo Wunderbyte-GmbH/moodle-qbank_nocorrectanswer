@@ -41,4 +41,19 @@ $shortcodes = [
         'wraps' => false,
         'description' => 'performanceoverview',
     ],
+    'coursecorrectanswers' => [
+        'callback' => 'qbank_nocorrectanswer\shortcodes::coursecorrectanswers',
+        'wraps' => false,
+        'description' => 'coursecorrectanswers',
+    ],
+    'courseresultoverview' => [
+        'callback' => 'qbank_nocorrectanswer\shortcodes::courseresultoverview',
+        'wraps' => false,
+        'description' => 'courseresultoverview',
+    ],
+    'courseperformanceoverview' => [
+        'callback' => 'qbank_nocorrectanswer\shortcodes::courseperformanceoverview',
+        'wraps' => false,
+        'description' => 'courseperformanceoverview',
+    ],
 ];

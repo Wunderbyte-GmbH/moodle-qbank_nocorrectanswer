@@ -122,4 +122,76 @@ class shortcodes {
         );
         return $output->render_performanceoverview($data);
     }
+
+    /**
+     * This shortcode shows a list of results of questions
+     *
+     * @param string $shortcode
+     * @param array $args
+     * @param string|null $content
+     * @param object $env
+     * @param Closure $next
+     * @return string
+     */
+    public static function coursecorrectanswers($shortcode, $args, $content, $env, $next) {
+        global $PAGE;
+        // Get the renderer.
+        $lastquiz = qbank_nocorrectanswer::get_all_quizzes_from_course($args);
+        $data = new performanceoverview(
+            $lastquiz,
+            $lastfivequiz,
+            $averagequiz
+        );
+        return $output->render_courseperformanceoverview($data);
+    }
+
+    /**
+     * This shortcode shows a list of results of questions
+     *
+     * @param string $shortcode
+     * @param array $args
+     * @param string|null $content
+     * @param object $env
+     * @param Closure $next
+     * @return string
+     */
+    public static function courseresultoverview($shortcode, $args, $content, $env, $next) {
+        global $PAGE;
+        // Get the renderer.
+
+        $lastquiz = qbank_nocorrectanswer::get_all_quizzes_from_course($args);
+
+        // $averagequiz = qbank_nocorrectanswer::get_average_cquiz($args);
+
+        $output = $PAGE->get_renderer('qbank_nocorrectanswer');
+        // $data = new resultoverview(
+        //     $lastquiz,
+        // );
+        return "test";
+    }
+
+    /**
+     * This shortcode shows a list of results of questions
+     *
+     * @param string $shortcode
+     * @param array $args
+     * @param string|null $content
+     * @param object $env
+     * @param Closure $next
+     * @return string
+     */
+    public static function courseperformanceoverview($shortcode, $args, $content, $env, $next) {
+        global $PAGE;
+        // Get the renderer.
+        $lastquiz = qbank_nocorrectanswer::get_last_cquiz($args);
+        $lastfivequiz = qbank_nocorrectanswer::get_last_five_cquiz($args);
+        $averagequiz = qbank_nocorrectanswer::get_average_cquiz($args);
+        $output = $PAGE->get_renderer('qbank_nocorrectanswer');
+        $data = new performanceoverview(
+            $lastquiz,
+            $lastfivequiz,
+            $averagequiz
+        );
+        return $output->render_performanceoverview($data);
+    }
 }

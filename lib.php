@@ -82,9 +82,12 @@ function qbank_nocorrectanswer_exception_handler($exception) {
 }
 
 function qbank_nocorrectanswer_init() {
+
     set_exception_handler('qbank_nocorrectanswer_exception_handler');
 }
 
 function qbank_nocorrectanswer_after_config() {
+    global $CFG;
     qbank_nocorrectanswer_init();
+    $CFG->chart_colorset = ['#357a32', '#ca3120'];
 }

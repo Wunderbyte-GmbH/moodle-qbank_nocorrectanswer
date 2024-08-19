@@ -32,7 +32,7 @@ $string['repeat_wrong_btn'] = "Falsche wiederholen";
 $string['edited_questions'] = '{$a->edit} von {$a->absolute} bearbeitet';
 $string['correct_questions'] = '{$a->correct} von {$a->edit} korrekt';
 $string['wrong_questions'] = '{$a->wrong} von {$a->edit} falsch';
-$string['questions_statistic'] = 'Auswertung-Fragen';
+$string['questions_statistic'] = 'Statistik';
 
 // Shortcodes.
 $string['correctanswers'] = "Zeige die richtig beantworteten Fragen des aktuellen Benutzers an";
@@ -42,7 +42,7 @@ $string['correctanswers'] = "Zeige die richtig beantworteten Fragen des aktuelle
 $string['resultoverview_results'] = 'Ergebnisse';
 $string['resultoverview_last_result'] = "Deine letzte Übung";
 $string['resultoverview_first_result'] = "Originale Übung";
-$string['resultoverview_current_values'] = "Deine aktuellsten Werte";
+$string['resultoverview_current_values'] = "Deine aktuelle Übung";
 $string['resultoverview_points'] = 'Punkte:';
 $string['resultoverview_from'] = 'von';
 $string['resultoverview_percentage'] = 'Prozentwert: ';
@@ -58,10 +58,10 @@ $string['resultoverview_information'] = '* Werte können sich im weiteren Verlau
 $string['resultoverview_performance'] = 'Performance';
 
 // Performance overview.
-$string['performanceoverview_performance'] = 'Performance der aktuellen Übung';
+$string['performanceoverview_performance'] = 'Deine Performance';
 $string['performanceoverview_from'] = "von";
 $string['performanceoverview_points'] = "Punkten";
-$string['performanceoverview_average'] = "ø-Performance der letzten 5 Übungen";
+$string['performanceoverview_average'] = "ø-Performance der letzten 4 Übungen";
 $string['performanceoverview_current'] = 'Deine aktuelle Übung im Vergleich zu {$a} Teilnehmer:innen:';
 $string['performanceoverview_average_total'] = 'Mittelwert der Vergleichsgruppe';
 $string['performanceoverview_max_total'] = 'Maximale Punktzahl der Vergleichsgruppe';
@@ -80,3 +80,10 @@ $string['meanvaluemapping'] = 'Standardwert Zuweisung';
 $string['meanvalue'] = 'Standardwert';
 
 $string['allquestionsanswered'] = 'Sie haben alle Fragen dieser Kategorie beantwortet und können die Simulation gerne noch einmal starten.';
+
+$string['questionsinfo_percentagerank'] = '<p>Der Prozentrangwert bezieht sich, wie im Originaltest, nur auf 20 der insgesamt 24 Aufgaben, da vier Aufgaben als Einstreuaufgaben nicht gewertet werden.
+Der Prozentrangwert basiert auf den Daten der letzten Jahre und dient als Orientierungshilfe. Im Originaltest kann dieser Wert jedoch abweichen./p>';
+
+$string['questionsinfo_percentage'] = '<p>Dein Prozentwert bezieht sich auf 20 von 24 Aufgaben, weil vier Aufgaben im Test nicht gewertet werden.</p>';
+$string['questionsinfo_test_value'] = '<p>Dein Testwert bezieht sich auf 20 von 24 Aufgaben, weil vier Aufgaben im Test nicht gewertet werden.</p>';
+$string['questionsinfo_percentagerank'] = '<p>Dein Prozentwertrang bezieht sich auf 20 von 24 Aufgaben, weil vier Aufgaben im Test nicht gewertet werden.</p>';

@@ -76,9 +76,6 @@ class resultoverview implements renderable, templatable {
           'resultoverview_max_total' => get_string('resultoverview_max_total', 'qbank_nocorrectanswer'),
           'resultoverview_information' => get_string('resultoverview_information', 'qbank_nocorrectanswer'),
           'resultoverview_performance' => get_string('resultoverview_performance', 'qbank_nocorrectanswer'),
-          'questionsinfo_test_value' => get_string('questionsinfo_test_value', 'qbank_nocorrectanswer'),
-          'questionsinfo_percentage' => get_string('questionsinfo_percentage', 'qbank_nocorrectanswer'),
-          'questionsinfo_percentagerank' => get_string('questionsinfo_percentagerank', 'qbank_nocorrectanswer'),
         ];
     }
 

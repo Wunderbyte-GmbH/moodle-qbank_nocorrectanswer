@@ -62,7 +62,7 @@ $string['resultoverview_performance'] = 'Performance';
 $string['performanceoverview_performance'] = 'Performance of the current exercise';
 $string['performanceoverview_from'] = 'of';
 $string['performanceoverview_points'] = 'points';
-$string['performanceoverview_average'] = 'Average performance of the last 5 exercises';
+$string['performanceoverview_average'] = 'Average performance of the last 4 exercises';
 $string['performanceoverview_current'] = 'Your current exercise compared to {$a} participants:';
 $string['performanceoverview_average_total'] = 'Average value of the comparison group';
 $string['performanceoverview_max_total'] = 'Maximum score of the comparison group';
@@ -80,3 +80,7 @@ $string['percentagerank'] = 'Percentagerank';
 $string['meanvaluemapping'] = 'Meanvalue';
 $string['meanvalue'] = 'Meanvalue';
 $string['allquestionsanswered'] = 'All question answered. Feel free to restart.';
+
+$string['questionsinfo_percentage'] = '<p>Your percentage score is based on 20 out of 24 tasks, as four tasks in the test are not counted.</p>';
+$string['questionsinfo_test_value'] = '<p>Your test score is based on 20 out of 24 tasks, as four tasks in the test are not counted.</p>';
+$string['questionsinfo_percentagerank'] = '<p>Your percentage rank is based on 20 out of 24 tasks, as four tasks in the test are not counted.</p>';
