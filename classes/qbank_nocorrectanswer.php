@@ -167,14 +167,6 @@ class qbank_nocorrectanswer {
             $data = $DB->get_records_sql($sql, $params);
             if ($data) {
                 $data = reset($data);
-                if ($config = get_config('qbank_nocorrectanswer', 'pc_' . $args['cmid'])) {
-                    $arrayvalues = json_decode($config);
-                    $data->percentagerank = $arrayvalues[(int)$data->usergrade];
-                }
-                if ($config = get_config('qbank_nocorrectanswer', 'mv_' . $args['cmid'])) {
-                    $arrayvalues = json_decode($config);
-                    $data->meanvalue = $arrayvalues[(int)$data->usergrade];
-                }
                 $data->usersumgrade = round($data->usersumgrade ?? 0, 2);
                 $data->usergrade = round($data->usergrade ?? 0, 2);
                 $data->sumgrades = round($data->sumgrades ?? 0, 2);
@@ -183,7 +175,18 @@ class qbank_nocorrectanswer {
                 $data->avg_user_sumgrades = round($data->avg_user_sumgrades ?? 0, 2);
                 $data->max_total_sumgrades = round($data->max_total_sumgrades ?? 0, 2);
                 $data->avg_total_sumgrades = round($data->avg_total_sumgrades ?? 0, 2);
-                $data->percentage = round((($data->usergrade ?? 0) / ($data->grade ?? 1)) * 100, 2);
+
+                if ($config = get_config('qbank_nocorrectanswer', 'pc_' . $args['cmid'])) {
+                    $arrayvalues = json_decode($config);
+                    $data->percentagerank = $arrayvalues[(int)$data->usergrade];
+                    $data->avg_percentagevalue = $arrayvalues[(int) $data->avg_user_sumgrades];
+                }
+                if ($config = get_config('qbank_nocorrectanswer', 'mv_' . $args['cmid'])) {
+                    $arrayvalues = json_decode($config);
+                    $data->meanvalue = $arrayvalues[(int)$data->usergrade];
+                    $data->avg_testvalue = $arrayvalues[(int) $data->avg_user_sumgrades];
+
+                }
             }
         }
         if (isset($args['showinfo'])) {

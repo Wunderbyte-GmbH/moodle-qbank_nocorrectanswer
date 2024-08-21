@@ -124,7 +124,9 @@
                         <h6>{{strings.performanceoverview_testvalue}}</h6>
                         <div class='qbank_nocorrectanswer_icon_value'>
                             <i class="fa-solid fa-chart-column"></i>
-                            <span class="qbank_nocorrectanswer_number">100</span>
+                            <span class="qbank_nocorrectanswer_number">
+                                {{lastquiz.avg_testvalue}}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -133,7 +135,9 @@
                         <h6>{{strings.performanceoverview_percentage}}</h6>
                         <div class='qbank_nocorrectanswer_icon_value'>
                             <i class="fa-solid fa-people-group"></i>
-                            <span class="qbank_nocorrectanswer_number">100 %</span>
+                            <span class="qbank_nocorrectanswer_number">
+                                {{lastquiz.avg_percentagevalue}}
+                            </span>
                         </div>
                     </div>
                 </div>
