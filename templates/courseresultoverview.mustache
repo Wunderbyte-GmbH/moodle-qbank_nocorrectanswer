@@ -1,0 +1,74 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_booking/business_card
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * data-region
+
+    Example context (json):
+    {
+        "piechart": "<div class=\"chart-area\" id=\"chart-area-667a7bc7a13d2667a7bc7995b77\"> <div class=\"chart-image\" role=\"presentation\" aria-describedby=\"chart-table-data-667a7bc7a13d2667a7bc7995b77\"></div> <div class=\"chart-table \"> <p class=\"chart-table-expand\"> <a href=\"#\" aria-controls=\"chart-table-data-667a7bc7a13d2667a7bc7995b77\" role=\"button\"> Show chart data </a> </p> <div class=\"chart-table-data\" id=\"chart-table-data-667a7bc7a13d2667a7bc7995b77\" role=\"complementary\" aria-expanded=\"false\"></div> </div> </div>",
+    }
+
+}}
+<div class="qbank_nocorrectanswer_question-statistics-container">
+    <div class="qbank_nocorrectanswer_card">
+        <div class="qbank_nocorrectanswer_card-header">
+            {{strings.resultoverview_results}}
+        </div>
+        <div class="qbank_nocorrectanswer_card-body">
+            <div class="qbank_nocorrectanswer_statistics">
+                <div class="qbank_nocorrectanswer_heading">{{strings.resultoverview_current_values}}</div>
+                <p>{{strings.resultoverview_points}}
+                  <span class="qbank_nocorrectanswer_number">{{lastquiz.usergrade}}</span>
+                  {{strings.resultoverview_from}}
+                  <span class="qbank_nocorrectanswer_number">{{lastquiz.grade}}</span>
+                </p>
+                <p>{{strings.resultoverview_percentage}}<span class="qbank_nocorrectanswer_number">{{lastquiz.percentage}} % </span>
+                    {{#lastquiz.showinfo}}
+                    <a class="btn btn-link p-0 float-right" role="button" data-container="body" data-toggle="popover" data-placement="right"
+                    data-content="{{{strings.questionsinfo_percentage}}}" data-html="true" tabindex="0" data-trigger="focus" aria-label="Hilfe" data-original-title="" title="" >
+                    <i class="icon fa fa-question-circle text-info fa-fw m-0" title="Punkteinfo" role="img" aria-label="Punkteinfo"></i>
+                    </a>
+                    {{/lastquiz.showinfo}}
+                </p>
+                <p>{{strings.resultoverview_percentagerank}}<span class="qbank_nocorrectanswer_number">{{lastquiz.percentagerank}}</span>
+                    {{#lastquiz.showinfo}}
+                    <a class="btn btn-link p-0 float-right" role="button" data-container="body" data-toggle="popover" data-placement="right"
+                    data-content="{{{strings.questionsinfo_percentagerank}}}" data-html="true" tabindex="0" data-trigger="focus" aria-label="Hilfe" data-original-title="" title="" >
+                    <i class="icon fa fa-question-circle text-info fa-fw m-0" title="Punkteinfo" role="img" aria-label="Punkteinfo"></i>
+                    </a>
+                    {{/lastquiz.showinfo}}
+                </p>
+                <p>{{strings.resultoverview_test_value}}<span class="qbank_nocorrectanswer_number">{{lastquiz.meanvalue}}</span>
+                    {{#lastquiz.showinfo}}
+                    <a class="btn btn-link p-0 float-right" role="button" data-container="body" data-toggle="popover" data-placement="right"
+                    data-content="{{{strings.questionsinfo_test_value}}}" data-html="true" tabindex="0" data-trigger="focus" aria-label="Hilfe" data-original-title="" title="" >
+                    <i class="icon fa fa-question-circle text-info fa-fw m-0" title="Punkteinfo" role="img" aria-label="Punkteinfo"></i>
+                    </a>
+                    {{/lastquiz.showinfo}}
+                </p>
+                <!-- <p>{{strings.resultoverview_average}}<span class="qbank_nocorrectanswer_number">{{lastquiz.avg_user_sumgrades}}</span></p> -->
+            </div>
+        </div>
+    </div>
+</div>
+

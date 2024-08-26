@@ -1,0 +1,147 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_booking/business_card
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * data-region
+
+    Example context (json):
+    {
+        "piechart": "<div class=\"chart-area\" id=\"chart-area-667a7bc7a13d2667a7bc7995b77\"> <div class=\"chart-image\" role=\"presentation\" aria-describedby=\"chart-table-data-667a7bc7a13d2667a7bc7995b77\"></div> <div class=\"chart-table \"> <p class=\"chart-table-expand\"> <a href=\"#\" aria-controls=\"chart-table-data-667a7bc7a13d2667a7bc7995b77\" role=\"button\"> Show chart data </a> </p> <div class=\"chart-table-data\" id=\"chart-table-data-667a7bc7a13d2667a7bc7995b77\" role=\"complementary\" aria-expanded=\"false\"></div> </div> </div>",
+    }
+
+}}
+
+<div>
+    <h6>
+        <span>
+            <button class="btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#performanceoverview_performance" aria-expanded="false">
+                {{strings.performanceoverview_performance}}
+                <i class="fa fa-chevron-down"></i>
+                <i class="fa fa-chevron-up"></i>
+            </button>
+        </span>
+    </h6>
+</div>
+<div id="performanceoverview_performance" class="qbank_nocorrectanswer_question-statistics-container collapse">
+    <div class="qbank_nocorrectanswer_results-overview row">
+        {{#lastpiechart}}
+        <div class="col-md-6">
+            <div class="qbank_nocorrectanswer_results-card">
+                <h6>{{strings.performanceoverview_performance}}</h6>
+                <div class="qbank_nocorrectanswer_chart-image">
+                    {{{lastpiechart}}}
+                    <span class="qbank_nocorrectanswer_number">
+                        {{lastquiz.usergrade}}
+                    </span> {{strings.performanceoverview_from}} <span class="qbank_nocorrectanswer_number">
+                    {{lastquiz.grade}}
+                    {{strings.performanceoverview_points}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        {{/lastpiechart}}
+        {{#fivepiechart}}
+        <div class="col-md-6">
+            <div class="qbank_nocorrectanswer_results-card">
+                <h6>{{strings.performanceoverview_average}}</h6>
+                <div class="qbank_nocorrectanswer_chart-image">
+                    {{{fivepiechart}}}
+                    <span class="qbank_nocorrectanswer_number">
+                    {{lastfivequiz.avg}}
+                    </span> {{strings.performanceoverview_from}}
+                    <span class="qbank_nocorrectanswer_number">
+                    {{lastquiz.grade}}
+                    {{strings.performanceoverview_points}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        {{/fivepiechart}}
+    </div>
+    <div class="row mt-4">
+        <div>
+            <h6>
+                <span>
+                    <button class="btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#performanceoverview_performance_comparison" aria-expanded="false">
+                        {{strings.performanceoverview_current}}
+                        <i class="fa fa-chevron-down"></i>
+                        <i class="fa fa-chevron-up"></i>
+                    </button>
+                </span>
+            </h6>
+        </div>
+    </div>
+        <div id="performanceoverview_performance_comparison" class="qbank_nocorrectanswer_question-statistics-container collapse">
+            <div class="row mb-2">
+                <div class="col-md-12">
+                    <div class="qbank_nocorrectanswer_comparison-text">{{strings.performanceoverview_current}}</div>
+                </div>
+            </div>
+            <div class="row mb-2 h-100">
+                <div class="col-md-3 d-flex">
+                    <div class="qbank_nocorrectanswer_results-card h-100 flex-grow-1">
+                        <h6>{{strings.performanceoverview_average_total}}</h6>
+                        <div class='qbank_nocorrectanswer_icon_value'>
+                            <i class="fas fa-tachometer-average"></i>
+                            <span class="qbank_nocorrectanswer_number">
+                            {{lastquiz.avg_total_sumgrades}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex">
+                    <div class="qbank_nocorrectanswer_results-card h-100 flex-grow-1">
+                        <h6>{{strings.performanceoverview_max_total}}</h6>
+                        <div class='qbank_nocorrectanswer_icon_value'>
+                            <i class="fa fa-star"></i>
+                            <span class="qbank_nocorrectanswer_number">
+                            {{lastquiz.max_total_sumgrades}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex">
+                    <div class="qbank_nocorrectanswer_results-card h-100 flex-grow-1">
+                        <h6>{{strings.performanceoverview_testvalue}}</h6>
+                        <div class='qbank_nocorrectanswer_icon_value'>
+                            <i class="fa-solid fa-chart-column"></i>
+                            <span class="qbank_nocorrectanswer_number">
+                                {{lastquiz.avg_testvalue}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex">
+                    <div class="qbank_nocorrectanswer_results-card h-100 flex-grow-1">
+                        <h6>{{strings.performanceoverview_percentage}}</h6>
+                        <div class='qbank_nocorrectanswer_icon_value'>
+                            <i class="fa-solid fa-people-group"></i>
+                            <span class="qbank_nocorrectanswer_number">
+                                {{lastquiz.avg_percentagevalue}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
