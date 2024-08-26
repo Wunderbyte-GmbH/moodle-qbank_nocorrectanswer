@@ -35,7 +35,7 @@ use templatable;
  *
  * @package qbank_nocorrectanswer
  * @copyright 2023 Wunderbyte GmbH <info@wunderbyte.at>
- * @author Georg Maißer {@link http://www.wunderbyte.at}
+ * @author Georg Maißer {@link http://www.wunderbyte.at}resultoverview
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class courseperformanceoverview implements renderable, templatable {
@@ -71,11 +71,11 @@ class courseperformanceoverview implements renderable, templatable {
         $this->lastfivequiz = $lastfivequiz;
         $numparticipants = 0;
 
-        if (isset($this->lastquiz->sumgrades)) {
-            $ration = $this->lastquiz->grade / $this->lastquiz->sumgrades;
+        if (isset($this->lastquiz->usergrade)) {
+            $ration = $this->lastquiz->grade / $this->lastquiz->usergrade;
             $lastseries = [
-              $this->lastquiz->usersumgrade * $ration,
-              $this->lastquiz->grade - ($this->lastquiz->usersumgrade * $ration),
+              $this->lastquiz->usergrade,
+              $this->lastquiz->grade - ($this->lastquiz->usergrade),
             ];
             $lastchart = new \core\chart_pie();
             $series = new chart_series('Results', $lastseries);
@@ -83,20 +83,22 @@ class courseperformanceoverview implements renderable, templatable {
             $lastchart->set_labels(['Correct', 'Wrong']);
             $lastchart->set_doughnut(true);
             $this->lastpiechart = $OUTPUT->render($lastchart);
-
-            $fiveseries = [
-              $lastfivequiz,
-              $this->lastquiz->grade - $lastfivequiz,
-            ];
-            $fivechart = new \core\chart_pie();
-            $series = new chart_series('Results', $fiveseries);
-            $fivechart->add_series($series);
-            $fivechart->set_labels(['Correct', 'Wrong']);
-            $fivechart->set_doughnut(true);
-            $this->fivepiechart = $OUTPUT->render($fivechart);
-            if (isset($averagequiz->num_participants)) {
-                $numparticipants = $averagequiz->num_participants;
+            if (!empty((array)$lastfivequiz)) {
+                $fiveseries = [
+                  $lastfivequiz->avg,
+                  $this->lastquiz->grade,
+                ];
+              $fivechart = new \core\chart_pie();
+              $series = new chart_series('Results', $fiveseries);
+              $fivechart->add_series($series);
+              $fivechart->set_labels(['Correct', 'Wrong']);
+              $fivechart->set_doughnut(true);
+              $this->fivepiechart = $OUTPUT->render($fivechart);
+              if (isset($averagequiz->num_participants)) {
+                  $numparticipants = $averagequiz->num_participants;
+              }
             }
+
         }
         $this->strings = [
           'performanceoverview_performance' => get_string('performanceoverview_performance', 'qbank_nocorrectanswer'),

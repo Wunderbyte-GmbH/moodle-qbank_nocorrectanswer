@@ -76,6 +76,41 @@ class renderer extends plugin_renderer_base {
         return $o;
     }
 
+
+    /**
+     * Function to print html qoverview
+     * @param performanceoverview $data
+     * @return string
+     */
+    public function render_courseresultoverview(courseresultoverview $data) {
+        $o = '';
+        $data = $data->export_for_template($this);
+        $o .= $this->render_from_template('qbank_nocorrectanswer/courseresultoverview', $data);
+        return $o;
+    }
+    /**
+     * Function to print html qoverview
+     * @param performanceoverview $data
+     * @return string
+     */
+    public function render_courseoverview(courseoverview $data) {
+        $o = '';
+        $data = $data->export_for_template($this);
+        $o .= $this->render_from_template('qbank_nocorrectanswer/courseoverview', $data);
+        return $o;
+    }
+    /**
+     * Function to print html qoverview
+     * @param performanceoverview $data
+     * @return string
+     */
+    public function render_courseperformanceoverview(courseperformanceoverview $data) {
+        $o = '';
+        $data = $data->export_for_template($this);
+        $o .= $this->render_from_template('qbank_nocorrectanswer/courseperformanceoverview', $data);
+        return $o;
+    }
+
     /**
      * Function to print html qoverview
      * @param performanceoverview $data

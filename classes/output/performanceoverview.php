@@ -74,8 +74,8 @@ class performanceoverview implements renderable, templatable {
         if (isset($this->lastquiz->sumgrades)) {
             $ration = $this->lastquiz->grade / $this->lastquiz->sumgrades;
             $lastseries = [
-              $this->lastquiz->usersumgrade * $ration,
-              $this->lastquiz->grade - ($this->lastquiz->usersumgrade * $ration),
+              $this->lastquiz->usergrade,
+              $this->lastquiz->grade - ($this->lastquiz->usergrade),
             ];
             $lastchart = new \core\chart_pie();
             $series = new chart_series('Results', $lastseries);

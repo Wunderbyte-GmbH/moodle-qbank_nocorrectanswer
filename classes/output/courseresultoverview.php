@@ -37,7 +37,7 @@ use templatable;
  * @author Georg Maißer {@link http://www.wunderbyte.at}
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class resultoverview implements renderable, templatable {
+class courseresultoverview implements renderable, templatable {
 
     /** @var array $strings Localised strigns */
     public $strings = [];

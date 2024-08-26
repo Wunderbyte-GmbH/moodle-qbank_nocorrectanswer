@@ -145,7 +145,7 @@ class qbank_nocorrectanswer {
      * @return array
      */
     public static function get_last_quiz($args) {
-        $data = [];
+        $data = new stdClass();
         if (isset($args['cmid'])) {
             global $USER, $DB;
             $params = [
@@ -175,7 +175,7 @@ class qbank_nocorrectanswer {
                 $data->avg_user_sumgrades = round($data->avg_user_sumgrades ?? 0, 2);
                 $data->max_total_sumgrades = round($data->max_total_sumgrades ?? 0, 2);
                 $data->avg_total_sumgrades = round($data->avg_total_sumgrades ?? 0, 2);
-
+                $data->percentage = round(100 * $data->usergrade / $data->grade, 0);
                 if ($config = get_config('qbank_nocorrectanswer', 'pc_' . $args['cmid'])) {
                     $arrayvalues = json_decode($config);
                     $data->percentagerank = $arrayvalues[(int)$data->usergrade];
@@ -187,11 +187,12 @@ class qbank_nocorrectanswer {
                     $data->avg_testvalue = $arrayvalues[(int) $data->avg_user_sumgrades];
 
                 }
+                if (isset($args['showinfo'])) {
+                    $data->showinfo = true;
+                }
             }
         }
-        if (isset($args['showinfo'])) {
-            $data->showinfo = true;
-        }
+
         return $data;
     }
 
@@ -291,6 +292,7 @@ class qbank_nocorrectanswer {
                 'userid' => $USER->id,
                 'courseid' => $args['courseid'],
             ];
+            $avgofquizzes = self::get_average_scores($args);
             // Get max points from quizzes and divide trough points.
             $select = "    SELECT
                 q.id AS quizid,
@@ -314,43 +316,63 @@ class qbank_nocorrectanswer {
                 {grade_grades} gg ON gg.itemid = gi.id AND gg.userid = :userid
             WHERE
                 c.id = :courseid
+                AND gg.finalgrade > 0
             ORDER BY
-                COALESCE(qa.timefinish, 0) DESC,
+                COALESCE(qa.timefinish, 0) asc,
                 gi.id
             ";
-
             $results = $DB->get_records_sql($select, $params);
             $data = new stdClass();
             $data->quizstatistic = new stdClass();
+            $data->quizstatistic->totalpossiblepoints = self::get_maxscores_from_quizzes($args);
             $sumgrade = 0;
             $lastattempt = 0;
             $lastquiz = new stdClass();
+            $fourquizzes = new stdClass();
+            $count = 0;
+            if ($results) {
+                $numberofquizzestaken = count($results);
+
+            }
 
             foreach ($results as $result) {
                 // firstquiz
                 if (!$lastattempt && $result->timefinish) {
                     $lastquiz->maxpoints = $result->maxpoints;
-                    $lastquiz->usergrade = $result->usergrade;
+                    $lastquiz->grade = round( $result->maxpoints ?? 0, 2);
+                    $lastquiz->usergrade = round( $result->usergrade ?? 0, 2);
+                    $lastquiz->percentage = round( $result->usergrade / $result->maxpoints * 100 ?? 0, 2);
+
                     if (isset($args['refcmid'])) {
                         if ($config = get_config('qbank_nocorrectanswer', 'pc_' . $args['refcmid'])) {
                             $arrayvalues = json_decode($config);
-                            $lastquiz->percentagerank = $arrayvalues[(int)$data->usergrade];
+                            $lastquiz->percentagerank = $arrayvalues[(int)$lastquiz->usergrade];
                         }
                         if ($config = get_config('qbank_nocorrectanswer', 'mv_' . $args['refcmid'])) {
                             $arrayvalues = json_decode($config);
-                            $lastquiz->meanvalue = $arrayvalues[(int)$data->usergrade];
+                            $lastquiz->meanvalue = $arrayvalues[(int)$lastquiz->usergrade];
                         }
                     }
                 }
-                $average += $result->usersumgrade;
+                if ($numberofquizzestaken >= 4) {
+                    if ($count < 4) {
+                        $fourquizzes->avg += $result->usergrade;
+                        $fourquizzes->maxpoints += $result->maxpoints;
+                        $count ++;
+                    }
+                    if ($count == 4) {
+                        $fourquizzes->avg = round(($fourquizzes->avg / 4) ?? 0, 2);
+                        $fourquizzes->maxpoints =round(($fourquizzes->maxpoints / 4) ?? 0, 2);
+                    }
+                }
+                $average += $result->usergrade;
                 $sumgrade = $result->sumgrades;
                 $maxpoints += $result->maxpoints;
                 $userpoints += $result->usergrade;
                 if ($result->usergrade) {
-                    $data->quizstatistic->maxpoints += $result->maxpoints;
+                    $data->quizstatistic->grade += $result->maxpoints;
                     $data->quizstatistic->usergrade  += $result->usergrade;
                 }
-
             }
             if ($results) {
                 $average = $average * $sumgrade / count($results);
@@ -365,12 +387,60 @@ class qbank_nocorrectanswer {
             // Last Quiz statistic.
             $data->lastquiz = $lastquiz;
 
+            $data->fourquizzes = $fourquizzes;
             // Last 4 Quizstatistic
             $data->quizzes = $results;
-
 
         }
         $quizzes = $results;
         return $data;
+    }
+
+    public static function get_average_scores($args) {
+        global $DB;
+        $params = [
+            'courseid' => $args['courseid'],
+        ];
+        $select = "
+        SELECT
+            AVG(gg.finalgrade / q.grade) AS overallaveragegradefraction
+        FROM
+            {quiz} q
+        JOIN
+            {course} c ON c.id = q.course
+        JOIN
+            {quiz_attempts} qa ON qa.quiz = q.id
+        JOIN
+            {grade_items} gi ON gi.iteminstance = q.id AND gi.itemmodule = 'quiz'
+        JOIN
+            {grade_grades} gg ON gg.itemid = gi.id
+        WHERE
+            c.id = :courseid
+            AND qa.timefinish IS NOT NULL
+        GROUP BY
+            q.id
+        HAVING
+            COUNT(qa.userid) > 0";
+        $results = $DB->get_records_sql($select, $params);
+        return $results;
+    }
+
+    public static function get_maxscores_from_quizzes($args) {
+        global $DB;
+        $params = [
+            'courseid' => $args['courseid'],
+        ];
+        $select = "
+        SELECT
+            SUM(q.grade) AS totalpossiblepoints
+        FROM
+            {quiz} q
+        JOIN
+            {course} c ON c.id = q.course
+        WHERE
+            c.id = :courseid
+        ";
+        $result = $DB->get_record_sql($select, $params);
+        return $result->totalpossiblepoints;
     }
 }

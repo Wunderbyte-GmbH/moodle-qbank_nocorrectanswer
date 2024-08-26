@@ -67,10 +67,10 @@ function qbank_nocorrectanswer_exception_handler($exception) {
     switch ($exception->errorcode) {
         case 'notenoughrandomquestions':
             $userid = $USER->id;
-            $preferencekey = 'qbank_nocorrect_'  . $USER->id . '_' . $exception->a->filtercondition['cmid'];
+            $url = new moodle_url($exception->link);
+            $preferencekey = 'qbank_nocorrect_'  . $USER->id . '_' . $url->get_param('id');
             $preferencevalue = time();
             set_user_preference($preferencekey, $preferencevalue, $userid);
-            $url = new moodle_url($exception->link);
             redirect($url, get_string('allquestionsanswered', 'qbank_nocorrectanswer'), null, \core\output\notification::NOTIFY_SUCCESS);
             break;
 

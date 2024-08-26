@@ -25,9 +25,13 @@
  */
 
 namespace qbank_nocorrectanswer;
+use qbank_nocorrectanswer\output\courseoverview;
+use qbank_nocorrectanswer\output\courseperformanceoverview;
+use qbank_nocorrectanswer\output\courseresultoverview;
 use qbank_nocorrectanswer\output\overview;
 use qbank_nocorrectanswer\output\resultoverview;
 use qbank_nocorrectanswer\output\performanceoverview;
+
 
 
 /**
@@ -136,13 +140,28 @@ class shortcodes {
     public static function coursecorrectanswers($shortcode, $args, $content, $env, $next) {
         global $PAGE;
         // Get the renderer.
-        $lastquiz = qbank_nocorrectanswer::get_all_quizzes_from_course($args);
-        $data = new performanceoverview(
-            $lastquiz,
-            $lastfivequiz,
-            $averagequiz
+        $data = qbank_nocorrectanswer::get_all_quizzes_from_course($args);
+
+        $wrongquiz = null;
+        if (isset($args['quizlink'])) {
+            $wrongquiz = $args['quizlink'];
+        }
+
+        $editedquestions['correct'] = $data->quizstatistic->usergrade;
+        $editedquestions['wrong'] = $data->quizstatistic->grade - $data->quizstatistic->usergrade;
+        $totalpoints = round($data->quizstatistic->totalpossiblepoints, 0, 2);
+
+        $editedquestions['edit'] = $data->quizstatistic->grade;
+        // Get the renderer.
+        $output = $PAGE->get_renderer('qbank_nocorrectanswer');
+        $data = new courseoverview(
+            [$editedquestions['correct'], $editedquestions['wrong']],
+            ['Correct', 'Wrong'],
+            $totalpoints,
+            $editedquestions,
+            $wrongquiz
         );
-        return $output->render_courseperformanceoverview($data);
+        return $output->render_courseoverview($data);
     }
 
     /**
@@ -159,15 +178,16 @@ class shortcodes {
         global $PAGE;
         // Get the renderer.
 
-        $lastquiz = qbank_nocorrectanswer::get_all_quizzes_from_course($args);
+        $data = qbank_nocorrectanswer::get_all_quizzes_from_course($args);
 
         // $averagequiz = qbank_nocorrectanswer::get_average_cquiz($args);
 
         $output = $PAGE->get_renderer('qbank_nocorrectanswer');
-        // $data = new resultoverview(
-        //     $lastquiz,
-        // );
-        return "test";
+        $data = new courseresultoverview(
+            $data->lastquiz,
+            $data->lastquiz,
+        );
+        return $output->render_courseresultoverview($data);
     }
 
     /**
@@ -183,15 +203,17 @@ class shortcodes {
     public static function courseperformanceoverview($shortcode, $args, $content, $env, $next) {
         global $PAGE;
         // Get the renderer.
-        $lastquiz = qbank_nocorrectanswer::get_last_cquiz($args);
-        $lastfivequiz = qbank_nocorrectanswer::get_last_five_cquiz($args);
-        $averagequiz = qbank_nocorrectanswer::get_average_cquiz($args);
+        $quizzes = qbank_nocorrectanswer::get_all_quizzes_from_course($args);
+        $lastquiz = $quizzes->lastquiz;
+        $fourquiz = $quizzes->fourquizzes;
+        // $lastfivequiz = qbank_nocorrectanswer::get_last_five_cquiz($args);
+        // $averagequiz = qbank_nocorrectanswer::get_average_cquiz($args);
         $output = $PAGE->get_renderer('qbank_nocorrectanswer');
-        $data = new performanceoverview(
+        $data = new courseperformanceoverview(
             $lastquiz,
-            $lastfivequiz,
-            $averagequiz
+            $fourquiz,
+            $lastquiz
         );
-        return $output->render_performanceoverview($data);
+        return $output->render_courseperformanceoverview($data);
     }
 }

@@ -38,7 +38,7 @@ use templatable;
  * @author Georg Maißer {@link http://www.wunderbyte.at}
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class overview implements renderable, templatable {
+class courseoverview implements renderable, templatable {
 
     /** @var string $piechart the note as it is saved in db */
     public $piechart = null;
@@ -66,6 +66,7 @@ class overview implements renderable, templatable {
      */
     public function __construct($series, $labels, $absquestions, $editedquestions, $wrongquiz) {
         global $OUTPUT, $PAGE;
+
         if (
             $series[0] == 0 &&
             $series[1] == 0
@@ -83,8 +84,6 @@ class overview implements renderable, templatable {
         $this->editedquestions = $editedquestions;
         $this->strings = [
           'questions_statistic' => get_string('questions_statistic', 'qbank_nocorrectanswer'),
-          'repeat_wrong' => get_string('repeat_wrong', 'qbank_nocorrectanswer'),
-          'repeat_wrong_btn' => get_string('repeat_wrong_btn', 'qbank_nocorrectanswer'),
           'edited_questions' => get_string('edited_questions', 'qbank_nocorrectanswer',
             ['edit' => $this->editedquestions['edit'], 'absolute' => $this->absquestions]
             ),
@@ -95,7 +94,6 @@ class overview implements renderable, templatable {
             ['wrong' => $this->editedquestions['wrong'], 'edit' => $this->editedquestions['edit']]
             ),
         ];
-        $this->wrongquiz = $wrongquiz;
     }
 
     /**
