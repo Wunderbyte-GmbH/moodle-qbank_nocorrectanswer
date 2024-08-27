@@ -47,14 +47,18 @@ class qbank_nocorrectanswer {
     public static function get_all_questions($args) {
         global $DB;
         $params = [];
-        $select = "SELECT q.* ";
-        $where = '';
-
-        if (isset($args['qcatid'])) {
-             $where = " WHERE qbe.questioncategoryid = :qcatid AND qv.status = 'ready'";
-             $params['qcatid'] = $args['qcatid'];
-        }
-        $sql = self::build_question_sql($select, $where);
+        $sql = "SELECT q.*
+        FROM {question} q
+        JOIN {question_versions} qv ON q.id = qv.questionid
+        JOIN {question_bank_entries} qbe ON qv.questionbankentryid = qbe.id
+        WHERE qbe.questioncategoryid = :qcatid
+          AND qv.status = 'ready'
+          AND qv.version = (
+              SELECT MAX(qv2.version)
+              FROM {question_versions} qv2
+              WHERE qv2.questionbankentryid = qv.questionbankentryid
+          )";
+        $params['qcatid'] = $args['qcatid'];
 
         $records = $DB->get_records_sql($sql, $params);
         return $records;
@@ -199,6 +203,17 @@ class qbank_nocorrectanswer {
 
         return $data;
     }
+
+    // public static function get_all_questions_of_cmid($args) {
+    //     global $DB;
+    //     $sql = "
+
+
+
+    //     "
+    //     $params = ['cmid' => $args['cmid']];
+
+    // }
 
     /**
      * Get average quiz results.
