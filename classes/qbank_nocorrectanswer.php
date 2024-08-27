@@ -210,7 +210,7 @@ class qbank_nocorrectanswer {
               JOIN {quiz} q ON q.id = qa.quiz
               JOIN {course_modules} cm ON cm.instance = q.id
               WHERE qa.userid =:userid AND cm.id =:cmid
-              ORDER BY qa.id DESC ";
+              ORDER BY COALESCE(qa.timefinish, 0) asc";
         $sql = $select . $from;
         if ($limit > 0) {
             $sql .= ' LIMIT ' . $limit;
