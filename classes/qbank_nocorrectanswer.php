@@ -70,7 +70,6 @@ class qbank_nocorrectanswer {
     public static function build_question_sql($select, $join) {
         $from = "FROM {question} q
             JOIN {question_versions} qv ON q.id = qv.questionid
-        LEFT JOIN {question_versions} qv2 ON qv.questionbankentryid = qv2.questionbankentryid AND qv.version < qv2.version
             JOIN {question_bank_entries} qbe ON qv.questionbankentryid = qbe.id
             ";
         $sql = $select . $from . $join;
@@ -210,7 +209,8 @@ class qbank_nocorrectanswer {
               JOIN {quiz} q ON q.id = qa.quiz
               JOIN {course_modules} cm ON cm.instance = q.id
               WHERE qa.userid =:userid AND cm.id =:cmid
-              ORDER BY COALESCE(qa.timefinish, 0) asc";
+              ORDER BY qg.timemodified desc
+             ";
         $sql = $select . $from;
         if ($limit > 0) {
             $sql .= ' LIMIT ' . $limit;
