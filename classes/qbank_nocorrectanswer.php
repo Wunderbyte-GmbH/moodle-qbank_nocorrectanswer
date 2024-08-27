@@ -155,21 +155,25 @@ class qbank_nocorrectanswer {
             ];
 
             $select = "SELECT
-                q.name,
-                qa.sumgrades AS usersumgrade,
-                qg.grade AS usergrade,
-                q.sumgrades AS sumgrades,
-                q.grade AS grade,
-                MAX(qa.sumgrades ) OVER (PARTITION BY qa.userid, qa.quiz) AS max_user_sumgrades,
-                AVG(qa.sumgrades) OVER (PARTITION BY qa.userid, qa.quiz) AS avg_user_sumgrades,
-                MAX(qa.sumgrades) OVER (PARTITION BY qa.quiz) AS max_total_sumgrades,
-                AVG(qa.sumgrades) OVER (PARTITION BY qa.quiz) AS avg_total_sumgrades ";
-            $sql = self::build_quiz_sql($select, 1);
+                    q.name,
+                    qa.sumgrades AS usersumgrade,
+                    qa.sumgrades / q.sumgrades * q.grade AS calculated_usergrade,  -- Calculate grade based on the specific attempt
+                    qg.grade AS usergrade,  -- This assumes qg.grade is an overall grade, which might not match an individual attempt
+                    q.sumgrades AS sumgrades,
+                    q.grade AS grade,
+                    qa.timemodified,
+                    qa.userid,
+                    qa.timefinish,
+                    MAX(qa.sumgrades) OVER (PARTITION BY qa.userid, qa.quiz) AS max_user_sumgrades,
+                    AVG(qa.sumgrades) OVER (PARTITION BY qa.userid, qa.quiz) AS avg_user_sumgrades,
+                    MAX(qa.sumgrades) OVER (PARTITION BY qa.quiz) AS max_total_sumgrades,
+                    AVG(qa.sumgrades) OVER (PARTITION BY qa.quiz) AS avg_total_sumgrades ";
+            $sql = self::build_quiz_sql($select, 0);
             $data = $DB->get_records_sql($sql, $params);
             if ($data) {
                 $data = reset($data);
                 $data->usersumgrade = round($data->usersumgrade ?? 0, 2);
-                $data->usergrade = round($data->usergrade ?? 0, 2);
+                $data->usergrade = round($data->calculated_usergrade ?? 0, 2);
                 $data->sumgrades = round($data->sumgrades ?? 0, 2);
                 $data->grade = round($data->grade ?? 0, 2);
                 $data->max_user_sumgrades = round($data->max_user_sumgrades ?? 0, 2);
@@ -205,11 +209,11 @@ class qbank_nocorrectanswer {
      */
     public static function build_quiz_sql($select, $limit) {
         $from = "FROM {quiz_attempts} qa
-              JOIN {quiz_grades} qg ON qg.quiz = qa.quiz
+              LEFT JOIN {quiz_grades} qg ON qg.quiz = qa.quiz
               JOIN {quiz} q ON q.id = qa.quiz
-              JOIN {course_modules} cm ON cm.instance = q.id
+              JOIN {course_modules} cm ON cm.instance = q.id AND qg.userid = qa.userid
               WHERE qa.userid =:userid AND cm.id =:cmid
-              ORDER BY qg.timemodified desc
+              ORDER BY qa.timefinish asc
              ";
         $sql = $select . $from;
         if ($limit > 0) {
