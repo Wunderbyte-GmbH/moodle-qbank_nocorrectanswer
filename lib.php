@@ -89,5 +89,5 @@ function qbank_nocorrectanswer_init() {
 function qbank_nocorrectanswer_after_config() {
     global $CFG;
     qbank_nocorrectanswer_init();
-    $CFG->chart_colorset = ['#357a32', '#ca3120'];
+    $CFG->chart_colorset = ['#dc3c28', '#32b400'];
 }
