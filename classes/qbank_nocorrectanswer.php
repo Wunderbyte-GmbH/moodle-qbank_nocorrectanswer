@@ -51,7 +51,7 @@ class qbank_nocorrectanswer {
         $where = '';
 
         if (isset($args['qcatid'])) {
-             $where = " WHERE qbe.questioncategoryid = :qcatid";
+             $where = " WHERE qbe.questioncategoryid = :qcatid AND qv.status = 'ready'";
              $params['qcatid'] = $args['qcatid'];
         }
         $sql = self::build_question_sql($select, $where);
@@ -69,8 +69,10 @@ class qbank_nocorrectanswer {
      */
     public static function build_question_sql($select, $join) {
         $from = "FROM {question} q
-            LEFT JOIN {question_versions} qv ON q.id = qv.questionid AND qv.status = 'ready'
-            LEFT JOIN {question_bank_entries} qbe ON qv.questionbankentryid = qbe.id";
+            JOIN {question_versions} qv ON q.id = qv.questionid
+        LEFT JOIN {question_versions} qv2 ON qv.questionbankentryid = qv2.questionbankentryid AND qv.version < qv2.version
+            JOIN {question_bank_entries} qbe ON qv.questionbankentryid = qbe.id
+            ";
         $sql = $select . $from . $join;
         return $sql;
     }
