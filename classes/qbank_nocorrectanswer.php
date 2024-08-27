@@ -69,8 +69,8 @@ class qbank_nocorrectanswer {
      */
     public static function build_question_sql($select, $join) {
         $from = "FROM {question} q
-            JOIN {question_versions} qv ON q.id = qv.questionid AND qv.status = 'ready'
-            JOIN {question_bank_entries} qbe ON qv.questionbankentryid = qbe.id";
+            LEFT JOIN {question_versions} qv ON q.id = qv.questionid AND qv.status = 'ready'
+            LEFT JOIN {question_bank_entries} qbe ON qv.questionbankentryid = qbe.id";
         $sql = $select . $from . $join;
         return $sql;
     }
