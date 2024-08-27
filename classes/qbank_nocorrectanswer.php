@@ -69,7 +69,7 @@ class qbank_nocorrectanswer {
      */
     public static function build_question_sql($select, $join) {
         $from = "FROM {question} q
-            JOIN {question_versions} qv ON q.id = qv.questionid
+            JOIN {question_versions} qv ON q.id = qv.questionid AND qv.status = 'ready'
             JOIN {question_bank_entries} qbe ON qv.questionbankentryid = qbe.id";
         $sql = $select . $from . $join;
         return $sql;
@@ -185,7 +185,6 @@ class qbank_nocorrectanswer {
                     $arrayvalues = json_decode($config);
                     $data->meanvalue = $arrayvalues[(int)$data->usergrade];
                     $data->avg_testvalue = $arrayvalues[(int) $data->avg_user_sumgrades];
-
                 }
                 if (isset($args['showinfo'])) {
                     $data->showinfo = true;
@@ -236,10 +235,141 @@ class qbank_nocorrectanswer {
                 JOIN {quiz_attempts} qa ON qg.quiz = qa.quiz
                 JOIN {course_modules} cm ON cm.instance = qa.quiz
                 WHERE cm.id =:cmid";
+            $data = $DB->get_records_sql($sql, $params);
+            if ($data) {
+                $data = reset($data);
+            }
+        }
+        return $data;
+    }
+
+
+    /**
+     * Get average course uiz results.
+     *
+     * @param array $args
+     * @return array
+     */
+    public static function get_average_cquiz($args) {
+        $data = [];
+        if (isset($args['courseid'])) {
+            global $DB;
+            $params = [
+                'courseid' => $args['courseid'],
+            ];
+            $sql = "SELECT
+                AVG(num_participants) AS avg_participants
+            FROM (
+                SELECT
+                    COUNT(DISTINCT qa.userid) AS num_participants
+                FROM {quiz_grades} qg
+                JOIN {quiz_attempts} qa ON qg.quiz = qa.quiz
+                JOIN {course_modules} cm ON cm.instance = qa.quiz
+                JOIN {modules} m ON cm.module = m.id AND m.name = 'quiz'
+                WHERE cm.course = :courseid
+                GROUP BY qa.quiz
+            ) AS participant_counts";
 
             $data = $DB->get_records_sql($sql, $params);
             if ($data) {
                 $data = reset($data);
+            }
+        }
+        return $data;
+    }
+
+  /**
+     * Get average course quiz results.
+     *
+     * @param array $args - cmid
+     * @return stdClass
+     */
+    public static function get_average_quiz_scores($args) {
+        global $DB, $USER;
+        $sql = "SELECT
+            'avg',
+            AVG(max_grade) AS average_max_grade
+        FROM (
+            SELECT
+                qa.userid,
+                MAX(qg.grade) AS max_grade
+            FROM
+                {quiz_grades} qg
+            JOIN
+                {quiz_attempts} qa ON qg.quiz = qa.quiz
+            JOIN
+                {course_modules} cm ON cm.instance = qa.quiz
+            JOIN
+                {modules} m ON cm.module = m.id AND m.name = 'quiz'
+            WHERE
+                cm.id = :cmid
+                AND qa.userid <> :excludeuserid
+            GROUP BY
+                qa.userid
+        ) AS user_max_grades;
+        ";
+        $result = $DB->get_records_sql($sql, ['cmid' => $args['cmid'], 'excludeuserid' => $USER->id]);
+        if ($result) {
+            reset($result);
+            $data = new stdClass();
+            $data->avg_max_grade = round($result['avg']->average_max_grade ??  0, 2);
+            if (isset($args['refcmid'])) {
+                if ($config = get_config('qbank_nocorrectanswer', 'pc_' . $args['refcmid'])) {
+                    $arrayvalues = json_decode($config);
+                    $data->avg_percentagevalue = $arrayvalues[(int) $data->avg_max_grade];
+                }
+                if ($config = get_config('qbank_nocorrectanswer', 'mv_' . $args['refcmid'])) {
+                    $arrayvalues = json_decode($config);
+                    $data->avg_testvalue = $arrayvalues[(int) $data->avg_max_grade];
+                }
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Get average course quiz results.
+     *
+     * @param array $args
+     * @return stdClass
+     */
+    public static function get_average_course_scores($args) {
+        global $DB, $USER;
+        $sql = "SELECT
+            'avg',
+            AVG(max_grade) AS average_max_grade
+        FROM (
+            SELECT
+                qa.userid,
+                MAX(qg.grade) AS max_grade
+            FROM
+                {quiz_grades} qg
+            JOIN
+                {quiz_attempts} qa ON qg.quiz = qa.quiz
+            JOIN
+                {course_modules} cm ON cm.instance = qa.quiz
+            JOIN
+                {modules} m ON cm.module = m.id AND m.name = 'quiz'
+            WHERE
+                cm.course = :courseid
+                AND qa.userid <> :excludeuserid
+            GROUP BY
+                qa.userid
+        ) AS user_max_grades";
+        $result = $DB->get_records_sql($sql, ['courseid' => $args['courseid'], 'excludeuserid' => $USER->id]);
+        if ($result) {
+            reset($result);
+            $data = new stdClass();
+            $data->avg_max_grade = round($result['avg']->average_max_grade ??  0, 2);
+            if (isset($args['refcmid'])) {
+                if ($config = get_config('qbank_nocorrectanswer', 'pc_' . $args['refcmid'])) {
+                    $arrayvalues = json_decode($config);
+                    $data->avg_percentagevalue = $arrayvalues[(int) $data->avg_max_grade];
+                }
+                if ($config = get_config('qbank_nocorrectanswer', 'mv_' . $args['refcmid'])) {
+                    $arrayvalues = json_decode($config);
+                    $data->avg_testvalue = $arrayvalues[(int) $data->avg_max_grade];
+                }
             }
         }
         return $data;

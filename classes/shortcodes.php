@@ -204,6 +204,10 @@ class shortcodes {
         global $PAGE;
         // Get the renderer.
         $quizzes = qbank_nocorrectanswer::get_all_quizzes_from_course($args);
+        $averagequiz = qbank_nocorrectanswer::get_average_cquiz($args);
+        $tst = qbank_nocorrectanswer::get_average_course_scores($args);
+
+
         $lastquiz = $quizzes->lastquiz;
         $fourquiz = $quizzes->fourquizzes;
         // $lastfivequiz = qbank_nocorrectanswer::get_last_five_cquiz($args);
@@ -212,7 +216,7 @@ class shortcodes {
         $data = new courseperformanceoverview(
             $lastquiz,
             $fourquiz,
-            $lastquiz
+            $averagequiz
         );
         return $output->render_courseperformanceoverview($data);
     }

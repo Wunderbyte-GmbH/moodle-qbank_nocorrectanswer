@@ -83,7 +83,6 @@ class performanceoverview implements renderable, templatable {
             $lastchart->set_labels(['Correct', 'Wrong']);
             $lastchart->set_doughnut(true);
             $this->lastpiechart = $OUTPUT->render($lastchart);
-
             $fiveseries = [
               $lastfivequiz,
               $this->lastquiz->grade - $lastfivequiz,
