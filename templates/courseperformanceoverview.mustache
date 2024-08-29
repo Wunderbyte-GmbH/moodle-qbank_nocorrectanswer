@@ -96,52 +96,52 @@
                     <div class="qbank_nocorrectanswer_comparison-text">{{strings.performanceoverview_current}}</div>
                 </div>
             </div>
-            <div class="row mb-2 h-100">
+           <div class="row mb-2 h-100">
                 <div class="col-md-3 d-flex">
                     <div class="qbank_nocorrectanswer_results-card h-100 flex-grow-1">
-                        <h6>{{strings.performanceoverview_average_total}}</h6>
                         <div class='qbank_nocorrectanswer_icon_value'>
-                            <i class="fas fa-tachometer-average"></i>
-                            <span class="qbank_nocorrectanswer_number">
-                            {{lastquiz.avg_total_sumgrades}}
-                            </span>
+                            <i class="fas fa-gauge"></i><br>
+                             <p class="qbank_nocorrectanswer_number">
+                            {{averagequiz.average_grade}}
+                            </p>
+                             <h6>{{strings.performanceoverview_average_total}}</h6>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3 d-flex">
                     <div class="qbank_nocorrectanswer_results-card h-100 flex-grow-1">
-                        <h6>{{strings.performanceoverview_max_total}}</h6>
                         <div class='qbank_nocorrectanswer_icon_value'>
-                            <i class="fa fa-star"></i>
-                            <span class="qbank_nocorrectanswer_number">
-                            {{lastquiz.max_total_sumgrades}}
-                            </span>
+                            <i class="fa fa-solid fa-arrow-up-right-dots"></i>
+                            <p class="qbank_nocorrectanswer_number">
+                            {{averagequiz.maxgrade}}
+                            </p>
+                            <h6>{{strings.performanceoverview_max_total}}</h6>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3 d-flex">
                     <div class="qbank_nocorrectanswer_results-card h-100 flex-grow-1">
-                        <h6>{{strings.performanceoverview_testvalue}}</h6>
                         <div class='qbank_nocorrectanswer_icon_value'>
                             <i class="fa-solid fa-chart-column"></i>
-                            <span class="qbank_nocorrectanswer_number">
-                                {{lastquiz.avg_testvalue}}
-                            </span>
+                            <p class="qbank_nocorrectanswer_number">
+                                {{averagequiz.avg_testvalue}}
+                            </p>
+                            <h6>{{strings.performanceoverview_testvalue}}</h6>
+
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3 d-flex">
                     <div class="qbank_nocorrectanswer_results-card h-100 flex-grow-1">
-                        <h6>{{strings.performanceoverview_percentage}}</h6>
                         <div class='qbank_nocorrectanswer_icon_value'>
-                            <i class="fa-solid fa-people-group"></i>
-                            <span class="qbank_nocorrectanswer_number">
-                                {{lastquiz.avg_percentagevalue}}
-                            </span>
+                            <i class="fa-solid fa-percentage"></i>
+                            <p class="qbank_nocorrectanswer_number">
+                                {{averagequiz.avg_percentagevalue}}
+                            </p>
+                            <h6>{{strings.performanceoverview_percentage}}</h6>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 </div>

@@ -69,8 +69,11 @@ class courseperformanceoverview implements renderable, templatable {
 
         $this->lastquiz = $lastquiz;
         $this->lastfivequiz = $lastfivequiz;
-        $numparticipants = 0;
+        $this->averagequiz = $averagequiz;
 
+        if (isset($averagequiz->num_participants)) {
+          $numparticipants = $averagequiz->num_participants;
+        }
         if (isset($this->lastquiz->usergrade)) {
             $ration = $this->lastquiz->grade / $this->lastquiz->usergrade;
             $lastseries = [
@@ -84,19 +87,17 @@ class courseperformanceoverview implements renderable, templatable {
             $lastchart->set_doughnut(true);
             $this->lastpiechart = $OUTPUT->render($lastchart);
             if (!empty((array)$lastfivequiz)) {
-                $fiveseries = [
-                  $lastfivequiz->avg,
-                  $this->lastquiz->grade,
-                ];
-              $fivechart = new \core\chart_pie();
-              $series = new chart_series('Results', $fiveseries);
-              $fivechart->add_series($series);
-              $fivechart->set_labels(['Correct', 'Wrong']);
-              $fivechart->set_doughnut(true);
-              $this->fivepiechart = $OUTPUT->render($fivechart);
-              if (isset($averagequiz->num_participants)) {
-                  $numparticipants = $averagequiz->num_participants;
-              }
+              $chart = new \core\chart_bar();
+
+              // Set the labels for the X-axis (dates)
+              $chart->set_labels($lastfivequiz->dates);
+
+              // Create a dataset for the points
+              $series = new \core\chart_series('Points', $lastfivequiz->points);
+              // Add the dataset to the chart
+              $chart->add_series($series);
+              $this->fivepiechart = $OUTPUT->render($chart);
+
             }
 
         }

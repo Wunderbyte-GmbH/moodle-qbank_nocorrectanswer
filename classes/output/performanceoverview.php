@@ -52,7 +52,7 @@ class performanceoverview implements renderable, templatable {
     /** @var array $lastquiz the note as it is saved in db */
     public $lastquiz = null;
 
-    /** @var int $lastfivequiz the note as it is saved in db */
+    /** @var \stdClass $lastfivequiz the note as it is saved in db */
     public $lastfivequiz = null;
 
     /** @var array $averagequiz the note as it is saved in db */
@@ -69,6 +69,7 @@ class performanceoverview implements renderable, templatable {
 
         $this->lastquiz = $lastquiz;
         $this->lastfivequiz = $lastfivequiz;
+        $this->averagequiz = $averagequiz;
         $numparticipants = 0;
 
         if (isset($this->lastquiz->sumgrades)) {
@@ -83,19 +84,23 @@ class performanceoverview implements renderable, templatable {
             $lastchart->set_labels(['Correct', 'Wrong']);
             $lastchart->set_doughnut(true);
             $this->lastpiechart = $OUTPUT->render($lastchart);
-            $fiveseries = [
-              $lastfivequiz,
-              $this->lastquiz->grade - $lastfivequiz,
-            ];
-            $fivechart = new \core\chart_pie();
-            $series = new chart_series('Results', $fiveseries);
-            $fivechart->add_series($series);
-            $fivechart->set_labels(['Correct', 'Wrong']);
-            $fivechart->set_doughnut(true);
-            $this->fivepiechart = $OUTPUT->render($fivechart);
+            if (!empty((array)$lastfivequiz)) {
+              $chart = new \core\chart_bar();
+
+              // Set the labels for the X-axis (dates)
+              $chart->set_labels($lastfivequiz->dates);
+
+              // Create a dataset for the points
+              $series = new \core\chart_series('Points', $lastfivequiz->points);
+              // Add the dataset to the chart
+              $chart->add_series($series);
+              $this->fivepiechart = $OUTPUT->render($chart);
+
+            }
             if (isset($averagequiz->num_participants)) {
                 $numparticipants = $averagequiz->num_participants;
             }
+
         }
         $this->strings = [
           'performanceoverview_performance' => get_string('performanceoverview_performance', 'qbank_nocorrectanswer'),

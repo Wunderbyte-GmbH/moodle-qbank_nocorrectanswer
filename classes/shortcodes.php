@@ -92,7 +92,7 @@ class shortcodes {
 
         $lastquiz = qbank_nocorrectanswer::get_last_quiz($args);
 
-        $averagequiz = qbank_nocorrectanswer::get_average_quiz($args);
+        $averagequiz = qbank_nocorrectanswer::get_average_quiz_scores($args);
 
         $output = $PAGE->get_renderer('qbank_nocorrectanswer');
         $data = new resultoverview(
@@ -117,7 +117,7 @@ class shortcodes {
         // Get the renderer.
         $lastquiz = qbank_nocorrectanswer::get_last_quiz($args);
         $lastfivequiz = qbank_nocorrectanswer::get_last_five_quiz($args);
-        $averagequiz = qbank_nocorrectanswer::get_average_quiz($args);
+        $averagequiz = qbank_nocorrectanswer::get_average_quiz_scores($args);
         $output = $PAGE->get_renderer('qbank_nocorrectanswer');
         $data = new performanceoverview(
             $lastquiz,
@@ -204,8 +204,8 @@ class shortcodes {
         global $PAGE;
         // Get the renderer.
         $quizzes = qbank_nocorrectanswer::get_all_quizzes_from_course($args);
-        $averagequiz = qbank_nocorrectanswer::get_average_cquiz($args);
-        $tst = qbank_nocorrectanswer::get_average_course_scores($args);
+        //$averagequiz = qbank_nocorrectanswer::get_average_cquiz($args);
+        $averagequiz = qbank_nocorrectanswer::get_average_course_scores($args);
 
 
         $lastquiz = $quizzes->lastquiz;

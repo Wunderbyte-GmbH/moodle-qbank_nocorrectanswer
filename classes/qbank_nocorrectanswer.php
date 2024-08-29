@@ -299,7 +299,7 @@ class qbank_nocorrectanswer {
         return $data;
     }
 
-  /**
+    /**
      * Get average course quiz results.
      *
      * @param array $args - cmid
@@ -308,41 +308,44 @@ class qbank_nocorrectanswer {
     public static function get_average_quiz_scores($args) {
         global $DB, $USER;
         $sql = "SELECT
-            'avg',
-            AVG(max_grade) AS average_max_grade
-        FROM (
-            SELECT
-                qa.userid,
-                MAX(qg.grade) AS max_grade
-            FROM
-                {quiz_grades} qg
-            JOIN
-                {quiz_attempts} qa ON qg.quiz = qa.quiz
-            JOIN
-                {course_modules} cm ON cm.instance = qa.quiz
-            JOIN
-                {modules} m ON cm.module = m.id AND m.name = 'quiz'
-            WHERE
-                cm.id = :cmid
-                AND qa.userid <> :excludeuserid
-            GROUP BY
-                qa.userid
-        ) AS user_max_grades;
+    COUNT(DISTINCT qa.userid) AS num_participants,
+    MAX(qg.grade) AS highest_grade,
+    AVG(qg.grade) AS average_grade
+FROM
+    {quiz_grades} qg
+JOIN
+    {quiz_attempts} qa ON qg.quiz = qa.quiz
+JOIN
+    {course_modules} cm ON cm.instance = qa.quiz
+JOIN
+    (
+        SELECT
+            userid,
+            quiz,
+            MAX(attempt) AS latest_attempt
+        FROM
+            {quiz_attempts}
+        GROUP BY
+            userid, quiz
+    ) latest_qa ON latest_qa.userid = qa.userid AND latest_qa.quiz = qa.quiz AND latest_qa.latest_attempt = qa.attempt
+WHERE
+    cm.id = :cmid
         ";
         $result = $DB->get_records_sql($sql, ['cmid' => $args['cmid'], 'excludeuserid' => $USER->id]);
         if ($result) {
-            reset($result);
+            $res = reset($result);
             $data = new stdClass();
-            $data->avg_max_grade = round($result['avg']->average_max_grade ??  0, 2);
-            if (isset($args['refcmid'])) {
-                if ($config = get_config('qbank_nocorrectanswer', 'pc_' . $args['refcmid'])) {
-                    $arrayvalues = json_decode($config);
-                    $data->avg_percentagevalue = $arrayvalues[(int) $data->avg_max_grade];
-                }
-                if ($config = get_config('qbank_nocorrectanswer', 'mv_' . $args['refcmid'])) {
-                    $arrayvalues = json_decode($config);
-                    $data->avg_testvalue = $arrayvalues[(int) $data->avg_max_grade];
-                }
+            $data->maxgrade = round($res->highest_grade ??  0, 2);
+            $data->num_participants = $res->num_participants;
+            $data->average_grade = round($res->average_grade ??  0, 2);
+            $refcmid = isset($args['refcmid']) ? $args['refcmid'] : $args['cmid'];
+            if ($config = get_config('qbank_nocorrectanswer', 'pc_' . $refcmid)) {
+                $arrayvalues = json_decode($config);
+                $data->avg_percentagevalue = $arrayvalues[(int) $res->average_grade];
+            }
+            if ($config = get_config('qbank_nocorrectanswer', 'mv_' . $refcmid)) {
+                $arrayvalues = json_decode($config);
+                $data->avg_testvalue = $arrayvalues[(int) $res->average_grade];
             }
         }
         return $data;
@@ -357,39 +360,45 @@ class qbank_nocorrectanswer {
     public static function get_average_course_scores($args) {
         global $DB, $USER;
         $sql = "SELECT
-            'avg',
-            AVG(max_grade) AS average_max_grade
-        FROM (
-            SELECT
-                qa.userid,
-                MAX(qg.grade) AS max_grade
-            FROM
-                {quiz_grades} qg
-            JOIN
-                {quiz_attempts} qa ON qg.quiz = qa.quiz
-            JOIN
-                {course_modules} cm ON cm.instance = qa.quiz
-            JOIN
-                {modules} m ON cm.module = m.id AND m.name = 'quiz'
-            WHERE
-                cm.course = :courseid
-                AND qa.userid <> :excludeuserid
-            GROUP BY
-                qa.userid
-        ) AS user_max_grades";
-        $result = $DB->get_records_sql($sql, ['courseid' => $args['courseid'], 'excludeuserid' => $USER->id]);
+        COUNT(DISTINCT latest.userid) AS num_participants,
+            MAX(latest.grade) AS highest_grade,
+            AVG(latest.grade) AS average_grade
+        FROM
+            {quiz_grades} latest
+        JOIN
+            (
+                SELECT
+                    userid,
+                    MAX(timemodified) AS latest_timemodified
+                FROM
+                    {quiz_grades}
+                GROUP BY
+                    userid
+            ) latest_times ON latest.userid = latest_times.userid
+                        AND latest.timemodified = latest_times.latest_timemodified
+        JOIN
+            {quiz} qz ON latest.quiz = qz.id
+        JOIN
+            {course_modules} cm ON cm.instance = qz.id
+        JOIN
+            {modules} m ON cm.module = m.id AND m.name = 'quiz'
+        WHERE
+            cm.course = :courseid";
+        $result = $DB->get_records_sql($sql, ['courseid' => $args['courseid']]);
         if ($result) {
-            reset($result);
+            $res = reset($result);
             $data = new stdClass();
-            $data->avg_max_grade = round($result['avg']->average_max_grade ??  0, 2);
+            $data->maxgrade = round($res->highest_grade ??  0, 2);
+            $data->average_grade = round($res->average_grade ??  0, 2);
+            $data->num_participants = $res->num_participants;
             if (isset($args['refcmid'])) {
                 if ($config = get_config('qbank_nocorrectanswer', 'pc_' . $args['refcmid'])) {
                     $arrayvalues = json_decode($config);
-                    $data->avg_percentagevalue = $arrayvalues[(int) $data->avg_max_grade];
+                    $data->avg_percentagevalue = $arrayvalues[(int) $res->average_grade];
                 }
                 if ($config = get_config('qbank_nocorrectanswer', 'mv_' . $args['refcmid'])) {
                     $arrayvalues = json_decode($config);
-                    $data->avg_testvalue = $arrayvalues[(int) $data->avg_max_grade];
+                    $data->avg_testvalue = $arrayvalues[(int) $res->average_grade];
                 }
             }
         }
@@ -400,7 +409,7 @@ class qbank_nocorrectanswer {
      * Get all edited, correct and wrong questions of user.
      *
      * @param array $args
-     * @return float
+     * @return stdClass()
      */
     public static function get_last_five_quiz($args) {
         $average = 0;
@@ -419,15 +428,19 @@ class qbank_nocorrectanswer {
             $sql = self::build_quiz_sql($select, 4);
             $results = $DB->get_records_sql($sql, $params);
             $sumgrade = 0;
+            $count = 0;
+            $lastfivequiz = new stdClass();
+            $lastfivequiz->dates = [];
+            $lastfivequiz->points = [];
             foreach ($results as $result) {
-                $average += $result->usersumgrade;
-                $sumgrade = $result->sumgrades;
-            }
-            if ($results) {
-                $average = $average / count($results);
+                if ($count < 5) {
+                    $lastfivequiz->dates[] = date('d.m.y', $result->timefinish);
+                    $lastfivequiz->points[] = $result->usergrade;
+                    $count ++;
+                }
             }
         }
-        return (int) $average;
+        return $lastfivequiz;
     }
 
     /**
@@ -443,34 +456,31 @@ class qbank_nocorrectanswer {
                 'userid' => $USER->id,
                 'courseid' => $args['courseid'],
             ];
-            $avgofquizzes = self::get_average_scores($args);
+            // $avgofquizzes = self::get_average_scores($args);
             // Get max points from quizzes and divide trough points.
-            $select = "    SELECT
+            $select = "SELECT
                 q.id AS quizid,
                 q.name AS quizname,
                 q.grade AS maxpoints,
-                gg.finalgrade AS usergrade,
+                COALESCE(qg.grade, 0) AS usergrade,
                 c.id AS courseid,
                 c.fullname AS coursename,
-                gi.id AS gradeitemid,
-                gg.finalgrade / q.grade AS gradefraction,
+                COALESCE(qg.grade / q.grade, 0) AS gradefraction,
                 qa.timefinish
             FROM
                 {quiz} q
             JOIN
                 {course} c ON c.id = q.course
             LEFT JOIN
-                {quiz_attempts} qa ON qa.quiz = q.id AND qa.userid = :useridq
+                {quiz_attempts} qa ON qa.quiz = q.id AND qa.userid = :userid
             LEFT JOIN
-                {grade_items} gi ON gi.iteminstance = q.id AND gi.itemmodule = 'quiz'
-            LEFT JOIN
-                {grade_grades} gg ON gg.itemid = gi.id AND gg.userid = :userid
+                {quiz_grades} qg ON qg.quiz = q.id AND qg.userid = :useridq
             WHERE
-                c.id = :courseid
-                AND gg.finalgrade > 0
+                c.id = :courseid and qa.timefinish > 0
             ORDER BY
-                COALESCE(qa.timefinish, 0) asc,
-                gi.id
+                COALESCE(qa.timefinish, 0) ASC,
+                q.id
+
             ";
             $results = $DB->get_records_sql($select, $params);
             $data = new stdClass();
@@ -485,6 +495,8 @@ class qbank_nocorrectanswer {
                 $numberofquizzestaken = count($results);
 
             }
+            $fourquizzes->dates = [];
+            $fourquizzes->points = [];
 
             foreach ($results as $result) {
                 // firstquiz
@@ -505,17 +517,12 @@ class qbank_nocorrectanswer {
                         }
                     }
                 }
-                if ($numberofquizzestaken >= 4) {
-                    if ($count < 4) {
-                        $fourquizzes->avg += $result->usergrade;
-                        $fourquizzes->maxpoints += $result->maxpoints;
-                        $count ++;
-                    }
-                    if ($count == 4) {
-                        $fourquizzes->avg = round(($fourquizzes->avg / 4) ?? 0, 2);
-                        $fourquizzes->maxpoints =round(($fourquizzes->maxpoints / 4) ?? 0, 2);
-                    }
+                if ($count < 5) {
+                    $fourquizzes->dates[] = date('d.m.y', $result->timefinish);
+                    $fourquizzes->points[] = $result->usergrade;
+                    $count ++;
                 }
+
                 $average += $result->usergrade;
                 $sumgrade = $result->sumgrades;
                 $maxpoints += $result->maxpoints;
