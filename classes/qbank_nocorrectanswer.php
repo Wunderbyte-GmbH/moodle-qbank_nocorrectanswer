@@ -420,13 +420,17 @@ WHERE
                 'cmid' => $args['cmid'],
             ];
             $select = "SELECT
-                qa.id,
-                qa.sumgrades AS usersumgrade,
-                qg.grade AS usergrade,
-                q.sumgrades  AS sumgrades,
-                q.grade AS grade ";
-            $sql = self::build_quiz_sql($select, 4);
-            $results = $DB->get_records_sql($sql, $params);
+                qg.id,
+
+                qg.grade AS usergrade
+             FROM
+                {quiz_grades} qg
+              JOIN {quiz} q ON q.id = qg.quiz
+              JOIN {course_modules} cm ON cm.instance = q.id
+              WHERE qg.userid = :userid AND cm.id = :cmid
+              ";
+            //$sql = self::build_quiz_sql($select, 5);
+            $results = $DB->get_records_sql($select, $params);
             $sumgrade = 0;
             $count = 0;
             $lastfivequiz = new stdClass();

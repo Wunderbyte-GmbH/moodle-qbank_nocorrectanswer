@@ -65,7 +65,7 @@ class courseperformanceoverview implements renderable, templatable {
      *
      */
     public function __construct($lastquiz, $lastfivequiz, $averagequiz) {
-        global $OUTPUT;
+        global $OUTPUT, $CFG;
 
         $this->lastquiz = $lastquiz;
         $this->lastfivequiz = $lastfivequiz;
@@ -88,6 +88,8 @@ class courseperformanceoverview implements renderable, templatable {
             $this->lastpiechart = $OUTPUT->render($lastchart);
             if (!empty((array)$lastfivequiz)) {
               $chart = new \core\chart_bar();
+              $CFG->chart_colorset = ['#32b400'];
+
 
               // Set the labels for the X-axis (dates)
               $chart->set_labels($lastfivequiz->dates);

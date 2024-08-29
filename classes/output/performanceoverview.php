@@ -65,7 +65,7 @@ class performanceoverview implements renderable, templatable {
      *
      */
     public function __construct($lastquiz, $lastfivequiz, $averagequiz) {
-        global $OUTPUT;
+        global $OUTPUT, $CFG;
 
         $this->lastquiz = $lastquiz;
         $this->lastfivequiz = $lastfivequiz;
@@ -85,13 +85,14 @@ class performanceoverview implements renderable, templatable {
             $lastchart->set_doughnut(true);
             $this->lastpiechart = $OUTPUT->render($lastchart);
             if (!empty((array)$lastfivequiz)) {
+              $CFG->chart_colorset = ['#32b400'];
               $chart = new \core\chart_bar();
-
+              $chart->set_horizontal(true);
               // Set the labels for the X-axis (dates)
               $chart->set_labels($lastfivequiz->dates);
 
               // Create a dataset for the points
-              $series = new \core\chart_series('Points', $lastfivequiz->points);
+              $series = new \core\chart_series('Punkte', $lastfivequiz->points);
               // Add the dataset to the chart
               $chart->add_series($series);
               $this->fivepiechart = $OUTPUT->render($chart);
