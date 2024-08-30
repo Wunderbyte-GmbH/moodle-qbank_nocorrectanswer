@@ -65,7 +65,7 @@ class courseoverview implements renderable, templatable {
      *
      */
     public function __construct($series, $labels, $absquestions, $editedquestions, $wrongquiz) {
-        global $OUTPUT, $PAGE, $CFG->httpswwwroot;
+        global $OUTPUT, $PAGE, $CFG;
 
         if (
             $series[0] == 0 &&
