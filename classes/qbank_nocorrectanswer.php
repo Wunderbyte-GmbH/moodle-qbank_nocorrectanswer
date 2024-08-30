@@ -421,13 +421,15 @@ WHERE
             ];
             $select = "SELECT
                 qg.id,
-
+                qg.timemodified,
                 qg.grade AS usergrade
              FROM
                 {quiz_grades} qg
               JOIN {quiz} q ON q.id = qg.quiz
               JOIN {course_modules} cm ON cm.instance = q.id
               WHERE qg.userid = :userid AND cm.id = :cmid
+              ORDER BY
+               COALESCE(qg.timemodified, 0) DESC
               ";
             //$sql = self::build_quiz_sql($select, 5);
             $results = $DB->get_records_sql($select, $params);
@@ -439,7 +441,7 @@ WHERE
             foreach ($results as $result) {
                 if ($count < 5) {
                     $lastfivequiz->dates[] = date('d.m.y', $result->timefinish);
-                    $lastfivequiz->points[] = $result->usergrade;
+                    $lastfivequiz->points[] = round($result->usergrade ?? 0, 0, 2);
                     $count ++;
                 }
             }
@@ -523,7 +525,7 @@ WHERE
                 }
                 if ($count < 5) {
                     $fourquizzes->dates[] = date('d.m.y', $result->timefinish);
-                    $fourquizzes->points[] = $result->usergrade;
+                    $fourquizzes->points[] = round($result->usergrade ?? 0, 0 ,2);
                     $count ++;
                 }
 

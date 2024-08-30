@@ -61,26 +61,6 @@ function qbank_nocorrectanswer_coursemodule_standard_elements($formwrapper, $mfo
     }
 }
 
-function qbank_nocorrectanswer_exception_handler($exception) {
-    global $OUTPUT, $PAGE, $CFG, $USER;
-    $msg = $exception->getMessage();
-    switch ($exception->errorcode) {
-        case 'notenoughrandomquestions':
-            $userid = $USER->id;
-            $url = new moodle_url($exception->link);
-            $preferencekey = 'qbank_nocorrect_'  . $USER->id . '_' . $url->get_param('id');
-            $preferencevalue = time();
-            set_user_preference($preferencekey, $preferencevalue, $userid);
-            redirect($url, get_string('allquestionsanswered', 'qbank_nocorrectanswer'), null, \core\output\notification::NOTIFY_SUCCESS);
-            break;
-
-        // Add more cases as needed
-        default:
-            default_exception_handler($exception);
-            break;
-    }
-}
-
 function qbank_nocorrectanswer_init() {
 
     set_exception_handler('qbank_nocorrectanswer_exception_handler');
