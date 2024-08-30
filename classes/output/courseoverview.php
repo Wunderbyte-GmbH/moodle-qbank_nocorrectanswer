@@ -65,7 +65,7 @@ class courseoverview implements renderable, templatable {
      *
      */
     public function __construct($series, $labels, $absquestions, $editedquestions, $wrongquiz) {
-        global $OUTPUT, $PAGE;
+        global $OUTPUT, $PAGE, $CFG->httpswwwroot;
 
         if (
             $series[0] == 0 &&
@@ -78,6 +78,7 @@ class courseoverview implements renderable, templatable {
             $chart->add_series($series);
             $chart->set_labels($labels);
             $chart->set_doughnut(true);
+            $CFG->chart_colorset = ['#32b400', '#dc3c28'];
             $this->piechart = $OUTPUT->render($chart);
         }
         $this->absquestions = $absquestions;

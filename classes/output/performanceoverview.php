@@ -83,6 +83,7 @@ class performanceoverview implements renderable, templatable {
             $lastchart->add_series($series);
             $lastchart->set_labels(['Correct', 'Wrong']);
             $lastchart->set_doughnut(true);
+            $CFG->chart_colorset = ['#32b400', '#dc3c28'];
             $this->lastpiechart = $OUTPUT->render($lastchart);
             if (!empty((array)$lastfivequiz)) {
               $CFG->chart_colorset = ['#32b400'];
