@@ -75,7 +75,6 @@ class courseperformanceoverview implements renderable, templatable {
           $numparticipants = $averagequiz->num_participants;
         }
         if (isset($this->lastquiz->usergrade)) {
-            $ration = $this->lastquiz->grade / $this->lastquiz->usergrade;
             $lastseries = [
               $this->lastquiz->usergrade,
               $this->lastquiz->grade - ($this->lastquiz->usergrade),
