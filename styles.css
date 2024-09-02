@@ -139,7 +139,7 @@
   text-align: left;
 }
 
-.qbank_nocorrectanswer_icon_value {
+.qbank_nocorrectanswer_icon_value .qbank_nocorrectanswer_number {
   align-items: center;
   justify-content: center;
   font-size: 2em;

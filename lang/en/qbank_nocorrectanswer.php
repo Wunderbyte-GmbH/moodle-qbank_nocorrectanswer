@@ -69,6 +69,11 @@ $string['performanceoverview_max_total'] = 'Maximum score of the comparison grou
 $string['performanceoverview_testvalue'] = 'Test value';
 $string['performanceoverview_percentage'] = 'Percentage rank';
 
+$string['performanceoverview_average_total_i'] = 'Average total of comparison group';
+$string['performanceoverview_max_total_i'] = 'This is the max points of the comparison group';
+$string['performanceoverview_testvalue_i'] = 'This is the mean average value of the comparison group';
+$string['performanceoverview_percentage_i'] = 'This is average percentage rank of the comparison group';
+
 // Settings.
 $string['numberofquestions'] = 'Number of Questions';
 $string['pleaseenternumber'] = 'Please enter a number';

@@ -63,10 +63,15 @@ $string['performanceoverview_from'] = "von";
 $string['performanceoverview_points'] = "Punkten";
 $string['performanceoverview_average'] = "ø-Performance der letzten 4 Übungen";
 $string['performanceoverview_current'] = 'Deine aktuelle Übung im Vergleich zu {$a} Teilnehmer:innen:';
-$string['performanceoverview_average_total'] = 'Mittelwert der Vergleichsgruppe';
-$string['performanceoverview_max_total'] = 'Maximale Punktzahl der Vergleichsgruppe';
+$string['performanceoverview_average_total'] = 'Mittelwert';
+$string['performanceoverview_max_total'] = 'Maximale Punktzahl';
 $string['performanceoverview_testvalue'] = 'Testwert';
 $string['performanceoverview_percentage'] = 'Prozentrang';
+
+$string['performanceoverview_average_total_i'] = 'Dies ist der Mittelwert der Vergleichsgruppe.';
+$string['performanceoverview_max_total_i'] = 'Dies ist die maximale Punktzahl der Vergleichsgruppe.';
+$string['performanceoverview_testvalue_i'] = 'Dies ist der Mittelwert (Standardwert) der Vergleichsgruppe der letzten Übung.';
+$string['performanceoverview_percentage_i'] = 'Dies ist der Mittelwert Prozentrangwert der Vergleichsgruppe der letzten Übung.';
 
 // Settings.
 $string['numberofquestions'] = 'Anzahl der Fragen';

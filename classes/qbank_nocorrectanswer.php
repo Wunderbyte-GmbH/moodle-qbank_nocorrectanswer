@@ -422,15 +422,40 @@ WHERE
             $select = "SELECT
                 qg.id,
                 qg.timemodified,
-                qg.grade AS usergrade
+                qg.grade AS usergrade,
+                qg.userid
              FROM
                 {quiz_grades} qg
-              JOIN {quiz} q ON q.id = qg.quiz
-              JOIN {course_modules} cm ON cm.instance = q.id
+              LEFT JOIN {quiz} q ON q.id = qg.quiz
+              LEFT JOIN {course_modules} cm ON cm.instance = q.id
               WHERE qg.userid = :userid AND cm.id = :cmid
               ORDER BY
                COALESCE(qg.timemodified, 0) DESC
               ";
+
+
+            $select  = "
+           SELECT
+    qa.id AS attemptid,
+    qa.quiz AS quizid,
+    qa.userid,
+    qa.sumgrades AS rawscore,
+    q.grade AS maxgrade,
+    (qa.sumgrades / q.sumgrades) * q.grade AS finalgrade,
+    qa.timefinish,
+    cm.id AS cmid
+FROM
+    {quiz_attempts} qa
+JOIN
+    {quiz} q ON q.id = qa.quiz
+JOIN
+    {course_modules} cm ON cm.instance = q.id AND cm.module = (SELECT id FROM {modules} WHERE name = 'quiz')
+WHERE
+    qa.userid = :userid
+    AND cm.id = :cmid
+ORDER BY
+    qa.timefinish DESC
+            ";
             //$sql = self::build_quiz_sql($select, 5);
             $results = $DB->get_records_sql($select, $params);
             $count = 0;
@@ -439,8 +464,8 @@ WHERE
             $lastfivequiz->points = [];
             foreach ($results as $result) {
                 if ($count < 5) {
-                    $lastfivequiz->dates[] = date('d.m.y H:i', $result->timemodified);
-                    $lastfivequiz->points[] = round($result->usergrade ?? 0, 0, 2);
+                    $lastfivequiz->dates[] = date('d.m.y H:i', $result->timefinish);
+                    $lastfivequiz->points[] = round($result->finalgrade ?? 0, 0, 2);
                     $count ++;
                 }
             }

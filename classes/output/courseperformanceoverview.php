@@ -113,6 +113,10 @@ class courseperformanceoverview implements renderable, templatable {
           'performanceoverview_max_total' => get_string('performanceoverview_max_total', 'qbank_nocorrectanswer'),
           'performanceoverview_testvalue' => get_string('performanceoverview_testvalue', 'qbank_nocorrectanswer'),
           'performanceoverview_percentage' => get_string('performanceoverview_percentage', 'qbank_nocorrectanswer'),
+          'performanceoverview_average_total_i' => get_string('performanceoverview_average_total_i', 'qbank_nocorrectanswer'),
+          'performanceoverview_max_total_i' => get_string('performanceoverview_max_total_i', 'qbank_nocorrectanswer'),
+          'performanceoverview_testvalue_i' => get_string('performanceoverview_testvalue_i', 'qbank_nocorrectanswer'),
+          'performanceoverview_percentage_i' => get_string('performanceoverview_percentage_i', 'qbank_nocorrectanswer'),
         ];
     }
 
