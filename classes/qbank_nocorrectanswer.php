@@ -440,7 +440,7 @@ WHERE
             $lastfivequiz->points = [];
             foreach ($results as $result) {
                 if ($count < 5) {
-                    $lastfivequiz->dates[] = date('d.m.y H:i', $result->timefinish);
+                    $lastfivequiz->dates[] = date('d.m.y H:i', $result->timemodified);
                     $lastfivequiz->points[] = round($result->usergrade ?? 0, 0, 2);
                     $count ++;
                 }
