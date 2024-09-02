@@ -26,6 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qbank_nocorrectanswer';
 $plugin->release = '0.1.0';
-$plugin->version = 2024082419;
+$plugin->version = 2024082429;
 $plugin->requires = 2022112800;
 $plugin->maturity = MATURITY_ALPHA;
