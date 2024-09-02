@@ -69,7 +69,7 @@ class courseoverview implements renderable, templatable {
 
         if (
             $series[0] == 0 &&
-            $series[1] == 0git
+            $series[1] == 0
         ) {
             $this->piechart = null;
         } else {

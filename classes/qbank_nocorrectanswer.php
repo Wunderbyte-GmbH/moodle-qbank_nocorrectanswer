@@ -433,7 +433,6 @@ WHERE
               ";
             //$sql = self::build_quiz_sql($select, 5);
             $results = $DB->get_records_sql($select, $params);
-            $sumgrade = 0;
             $count = 0;
             $lastfivequiz = new stdClass();
             $lastfivequiz->dates = [];
