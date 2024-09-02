@@ -30,7 +30,8 @@
 
 }}
 
-<div>
+<div class="container">
+<div class="row">
     <h6>
         <span>
             <button class="btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#performanceoverview_performance" aria-expanded="false">
@@ -41,7 +42,8 @@
         </span>
     </h6>
 </div>
-<div id="performanceoverview_performance" class="qbank_nocorrectanswer_question-statistics-container collapse">
+</div>
+<div id="performanceoverview_performance" class="qbank_nocorrectanswer_question-statistics-container row collapse">
     <div class="qbank_nocorrectanswer_results-overview row">
         {{#lastpiechart}}
         <div class="col-md-6">
@@ -77,20 +79,22 @@
         </div>
         {{/fivepiechart}}
     </div>
-    <div class="row mt-4">
-        <div>
-            <h6>
-                <span>
-                    <button class="btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#performanceoverview_performance_comparison" aria-expanded="false">
-                        {{strings.performanceoverview_current}}
-                        <i class="fa fa-chevron-down"></i>
-                        <i class="fa fa-chevron-up"></i>
-                    </button>
-                </span>
-            </h6>
+    <div class="container">
+        <div class="row mt-4">
+            <div>
+                <h6>
+                    <span>
+                        <button class="btn btn-primary btn-collapse" type="button" data-toggle="collapse" data-target="#performanceoverview_performance_comparison" aria-expanded="false">
+                            {{strings.performanceoverview_current}}
+                            <i class="fa fa-chevron-down"></i>
+                            <i class="fa fa-chevron-up"></i>
+                        </button>
+                    </span>
+                </h6>
+            </div>
         </div>
     </div>
-        <div id="performanceoverview_performance_comparison" class="qbank_nocorrectanswer_question-statistics-container collapse">
+        <div id="performanceoverview_performance_comparison" class="qbank_nocorrectanswer_question-statistics-container row collapse">
             <div class="row mb-2">
                 <div class="col-md-12">
                     <div class="qbank_nocorrectanswer_comparison-text">{{strings.performanceoverview_current}}</div>
