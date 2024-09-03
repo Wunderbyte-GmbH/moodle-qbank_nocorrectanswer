@@ -548,8 +548,8 @@ ORDER BY
                     }
                 }
                 if ($count < 5) {
-                    $fourquizzes->dates[] = date('d.m.y', $result->timefinish);
-                    $fourquizzes->points[] = round($result->usergrade ?? 0, 0 ,2);
+                    $fourquizzes->dates[] = date('d.m.y H:i', $result->timefinish);
+                    $fourquizzes->points[] = round($result->usergrade ?? 0, 0, 2);
                     $count ++;
                 }
 

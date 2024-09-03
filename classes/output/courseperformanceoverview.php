@@ -90,7 +90,7 @@ class courseperformanceoverview implements renderable, templatable {
               $chart = new \core\chart_bar();
               $CFG->chart_colorset = ['#32b400'];
 
-
+              $chart->set_horizontal(true);
               // Set the labels for the X-axis (dates)
               $chart->set_labels($lastfivequiz->dates);
 

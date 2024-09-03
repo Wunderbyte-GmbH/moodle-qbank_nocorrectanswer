@@ -155,8 +155,8 @@ class shortcodes {
             }
         }
 
-        $editedquestions['correct'] = $data->quizstatistic->usergrade;
-        $editedquestions['wrong'] = $data->quizstatistic->grade - $data->quizstatistic->usergrade;
+        $editedquestions['correct'] = round($data->quizstatistic->usergrade, 0, 2);
+        $editedquestions['wrong'] = round($data->quizstatistic->grade - $data->quizstatistic->usergrade, 0, 2);
         $totalpoints = round($data->quizstatistic->totalpossiblepoints, 0, 2);
 
         $editedquestions['edit'] = $data->quizstatistic->grade;
