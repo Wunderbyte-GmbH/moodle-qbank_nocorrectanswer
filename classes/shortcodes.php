@@ -61,7 +61,11 @@ class shortcodes {
 
         $wrongquiz = null;
         if (isset($args['quizlink'])) {
-            $wrongquiz = $args['quizlink'];
+            preg_match('/href=(https?:\/\/[^ ]+)/', $args['quizlink'], $matches);
+            // The URL will be in $matches[1] if found
+            if (isset($matches[1])) {
+                $wrongquiz = $matches[1];
+            }
         }
 
         // Get the renderer.
@@ -144,7 +148,11 @@ class shortcodes {
 
         $wrongquiz = null;
         if (isset($args['quizlink'])) {
-            $wrongquiz = $args['quizlink'];
+            preg_match('/href=(https?:\/\/[^ ]+)/', $args['quizlink'], $matches);
+            // The URL will be in $matches[1] if found
+            if (isset($matches[1])) {
+                $wrongquiz = $matches[1];
+            }
         }
 
         $editedquestions['correct'] = $data->quizstatistic->usergrade;
@@ -182,6 +190,14 @@ class shortcodes {
 
         // $averagequiz = qbank_nocorrectanswer::get_average_cquiz($args);
 
+        $wrongquiz = null;
+        if (isset($args['quizlink'])) {
+            preg_match('/href=(https?:\/\/[^ ]+)/', $args['quizlink'], $matches);
+            // The URL will be in $matches[1] if found
+            if (isset($matches[1])) {
+                $wrongquiz = $matches[1];
+            }
+        }
         $output = $PAGE->get_renderer('qbank_nocorrectanswer');
         $data = new courseresultoverview(
             $data->lastquiz,

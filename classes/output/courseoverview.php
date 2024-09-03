@@ -83,17 +83,20 @@ class courseoverview implements renderable, templatable {
         }
         $this->absquestions = $absquestions;
         $this->editedquestions = $editedquestions;
+        $this->wrongquiz = $wrongquiz;
         $this->strings = [
-          'questions_statistic' => get_string('questions_statistic', 'qbank_nocorrectanswer'),
-          'edited_questions' => get_string('edited_questions', 'qbank_nocorrectanswer',
-            ['edit' => $this->editedquestions['edit'], 'absolute' => $this->absquestions]
-            ),
-          'correct_questions' => get_string('correct_questions', 'qbank_nocorrectanswer',
-            ['correct' => $this->editedquestions['correct'], 'edit' => $this->editedquestions['edit']]
-            ),
-          'wrong_questions' => get_string('wrong_questions', 'qbank_nocorrectanswer',
-            ['wrong' => $this->editedquestions['wrong'], 'edit' => $this->editedquestions['edit']]
-            ),
+            'repeat_wrong' => get_string('repeat_wrong', 'qbank_nocorrectanswer'),
+            'repeat_wrong_btn' => get_string('repeat_wrong_btn', 'qbank_nocorrectanswer'),
+            'questions_statistic' => get_string('questions_statistic', 'qbank_nocorrectanswer'),
+            'edited_questions' => get_string('edited_questions', 'qbank_nocorrectanswer',
+                ['edit' => $this->editedquestions['edit'], 'absolute' => $this->absquestions]
+                ),
+            'correct_questions' => get_string('correct_questions', 'qbank_nocorrectanswer',
+                ['correct' => $this->editedquestions['correct'], 'edit' => $this->editedquestions['edit']]
+                ),
+            'wrong_questions' => get_string('wrong_questions', 'qbank_nocorrectanswer',
+                ['wrong' => $this->editedquestions['wrong'], 'edit' => $this->editedquestions['edit']]
+                ),
         ];
     }
 
