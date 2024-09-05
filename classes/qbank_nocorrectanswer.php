@@ -95,7 +95,7 @@ class qbank_nocorrectanswer {
         [$insql, $inparams] = $DB->get_in_or_equal(['gradedright', 'gradedwrong'], SQL_PARAMS_NAMED, 'param', true);
         $params = array_merge($params, $inparams);
         $subwhere .= $insql;
-        $subwhere2 = ""
+        $subwhere2 = "";
         if (isset($args['cmid'])) {
             $subwhere .= " AND c.instanceid = :cinstanceid";
             $params['cinstanceid'] = $args['cmid'];
