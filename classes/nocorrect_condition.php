@@ -154,7 +154,7 @@ class nocorrect_condition extends condition {
 
         $selectedoptions = self::get_query_value($filter['values']);
         $params = ['nocorrectuseruserid' => $USER->id];
-        if ($cmid) {
+        if ($cmid && !($selectedoptions['in'][0] == 'gradedwrong')) {
             $preferencekey = 'qbank_nocorrect_'  . $USER->id . '_' . $cmid;
             if (!empty($pref = get_user_preferences($preferencekey))) {
                 $addwhere = ' AND qas.timecreated > :timecreated';
@@ -179,7 +179,7 @@ class nocorrect_condition extends condition {
             $where = "q.id NOT IN (
                 SELECT qa.questionid
                 FROM {question_attempt_steps} qas
-                JOIN {question_attempts} qa ON qa.id=qas.questionattemptid
+                JOIN {question_attempts} qa ON qa.id=qas.questionattemptid,
                 WHERE qas.userid=:nocorrectuseruserid" . $sqlfraction  . $insql . $addwhere . ")";
         } else {
             // If there are no selected options, use the default query.
@@ -190,6 +190,47 @@ class nocorrect_condition extends condition {
                 WHERE qas.userid=:nocorrectuseruserid AND qas.state = 'gradedright' $addwhere
             )";
         }
+
+        if (($selectedoptions['in'][0] == 'gradedwrong')) {
+            $where = "q.id NOT IN (
+                    SELECT qa.questionid
+                    FROM m_question_attempt_steps qas
+                    JOIN m_question_attempts qa ON qa.id = qas.questionattemptid
+                    WHERE qas.userid = :nocorrectuseruserid2 and qas.state = 'gradedright'
+                    AND qas.timecreated = (
+                        -- Subquery to get the latest timecreated for each question
+                        SELECT MAX(qas2.timecreated)
+                        FROM m_question_attempt_steps qas2
+                        JOIN m_question_attempts qa2 ON qa2.id = qas2.questionattemptid
+                        WHERE qa2.questionid = qa.questionid
+                        AND qas2.userid = :nocorrectuseruserid3
+                        AND qas2.state IN ('gradedright', 'gradedwrong')
+                    )
+                    ORDER BY qa.questionid
+            )";
+            $params = ['nocorrectuseruserid2' => $USER->id, 'nocorrectuseruserid3' => $USER->id];
+
+        }
+        if (($selectedoptions['in'][0] == 'gradedright')) {
+            $where = "q.id NOT IN (
+                    SELECT qa.questionid
+                    FROM m_question_attempt_steps qas
+                    JOIN m_question_attempts qa ON qa.id = qas.questionattemptid
+                    WHERE qas.userid = :nocorrectuseruserid2 and qas.state = 'gradedwrong'
+                    AND qas.timecreated = (
+                        -- Subquery to get the latest timecreated for each question
+                        SELECT MAX(qas2.timecreated)
+                        FROM m_question_attempt_steps qas2
+                        JOIN m_question_attempts qa2 ON qa2.id = qas2.questionattemptid
+                        WHERE qa2.questionid = qa.questionid
+                        AND qas2.userid = :nocorrectuseruserid3
+                        AND qas2.state IN ('gradedright', 'gradedwrong')
+                    )
+                    ORDER BY qa.questionid
+            )";
+            $params = ['nocorrectuseruserid2' => $USER->id, 'nocorrectuseruserid3' => $USER->id];
+        }
+
 
         return [$where, $params];
     }
