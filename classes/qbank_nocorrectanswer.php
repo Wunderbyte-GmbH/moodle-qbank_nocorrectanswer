@@ -96,10 +96,10 @@ class qbank_nocorrectanswer {
         $params = array_merge($params, $inparams);
         $subwhere .= $insql;
         $subwhere2 = "";
-        if (isset($args['cmid'])) {
-            $subwhere .= " AND c.instanceid = :cinstanceid";
-            $params['cinstanceid'] = $args['cmid'];
-        }
+        // if (isset($args['cmid'])) {
+        //     $subwhere .= " AND c.instanceid = :cinstanceid";
+        //     $params['cinstanceid'] = $args['cmid'];
+        // }
 
         if (isset($args['qcatid'])) {
             $subwhere2 = " WHERE qbe.questioncategoryid = :qcatid";
