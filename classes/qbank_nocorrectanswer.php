@@ -101,10 +101,10 @@ class qbank_nocorrectanswer {
             $params['cinstanceid'] = $args['cmid'];
         }
 
-        if (isset($args['qcatid'])) {
-            $subwhere .= " AND qbe.questioncategoryid = :qcatid";
-            $params['qcatid'] = $args['qcatid'];
-        }
+        // if (isset($args['qcatid'])) {
+        //     $subwhere .= " AND qbe.questioncategoryid = :qcatid";
+        //     $params['qcatid'] = $args['qcatid'];
+        // }
         $select = "SELECT q.*, subquery.state ";
         $join = " JOIN (
               SELECT qa.questionid, qas.state
@@ -112,7 +112,7 @@ class qbank_nocorrectanswer {
               JOIN {question_attempts} qa ON qa.id = qas.questionattemptid
               JOIN {question_usages} qu ON qu.id = qa.questionusageid
               JOIN {context} c ON c.id = qu.contextid
-              JOIN {question_bank_entries} qbe ON qa.questionid = qbe.id
+              LEFT JOIN {question_bank_entries} qbe ON qa.questionid = qbe.id
               " . $subwhere . ") subquery ON q.id = subquery.questionid";
         $sql = self::build_question_sql($select, $join);
         $records = $DB->get_records_sql($sql, $params);
