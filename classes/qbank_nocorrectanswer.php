@@ -95,16 +95,16 @@ class qbank_nocorrectanswer {
         [$insql, $inparams] = $DB->get_in_or_equal(['gradedright', 'gradedwrong'], SQL_PARAMS_NAMED, 'param', true);
         $params = array_merge($params, $inparams);
         $subwhere .= $insql;
-
+        $subwhere2 = "";
         if (isset($args['cmid'])) {
             $subwhere .= " AND c.instanceid = :cinstanceid";
             $params['cinstanceid'] = $args['cmid'];
         }
 
-        // if (isset($args['qcatid'])) {
-        //     $subwhere .= " AND qbe.questioncategoryid = :qcatid";
-        //     $params['qcatid'] = $args['qcatid'];
-        // }
+        if (isset($args['qcatid'])) {
+            $subwhere2 = " WHERE qbe.questioncategoryid = :qcatid";
+            $params['qcatid'] = $args['qcatid'];
+        }
         $select = "SELECT q.*, subquery.state ";
         $join = " JOIN (
               SELECT qa.questionid, qas.state
@@ -113,7 +113,9 @@ class qbank_nocorrectanswer {
               JOIN {question_usages} qu ON qu.id = qa.questionusageid
               JOIN {context} c ON c.id = qu.contextid
               LEFT JOIN {question_bank_entries} qbe ON qa.questionid = qbe.id
-              " . $subwhere . ") subquery ON q.id = subquery.questionid";
+              " . $subwhere . ") subquery ON q.id = subquery.questionid .
+              $subwhere2
+              ";
         $sql = self::build_question_sql($select, $join);
         $records = $DB->get_records_sql($sql, $params);
         $userquestions = self::get_user_questiond_data($records);
