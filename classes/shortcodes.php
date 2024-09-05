@@ -159,7 +159,7 @@ class shortcodes {
         $editedquestions['wrong'] = round($data->quizstatistic->grade - $data->quizstatistic->usergrade, 0, 2);
         $totalpoints = round($data->quizstatistic->totalpossiblepoints, 0, 2);
 
-        $editedquestions['edit'] = $data->quizstatistic->grade;
+        $editedquestions['edit'] = $data->quizstatistic->grade ?? 0;
         // Get the renderer.
         $output = $PAGE->get_renderer('qbank_nocorrectanswer');
         $data = new courseoverview(

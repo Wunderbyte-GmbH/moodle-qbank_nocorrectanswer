@@ -179,7 +179,7 @@ class nocorrect_condition extends condition {
             $where = "q.id NOT IN (
                 SELECT qa.questionid
                 FROM {question_attempt_steps} qas
-                JOIN {question_attempts} qa ON qa.id=qas.questionattemptid,
+                JOIN {question_attempts} qa ON qa.id=qas.questionattemptid
                 WHERE qas.userid=:nocorrectuseruserid" . $sqlfraction  . $insql . $addwhere . ")";
         } else {
             // If there are no selected options, use the default query.
