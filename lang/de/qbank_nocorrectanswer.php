@@ -58,10 +58,10 @@ $string['resultoverview_information'] = '* Werte können sich im weiteren Verlau
 $string['resultoverview_performance'] = 'Performance';
 
 // Performance overview.
-$string['performanceoverview_performance'] = 'Deine Performance';
+$string['performanceoverview_performance'] = 'Dein Ergebnis';
 $string['performanceoverview_from'] = "von";
 $string['performanceoverview_points'] = "Punkten";
-$string['performanceoverview_average'] = "ø-Performance der letzten 4 Übungen";
+$string['performanceoverview_average'] = "Ergebnisse der letzen Übungen";
 $string['performanceoverview_current'] = 'Deine aktuelle Übung im Vergleich zu {$a} Teilnehmer:innen:';
 $string['performanceoverview_average_total'] = 'Mittelwert';
 $string['performanceoverview_max_total'] = 'Maximale Punktzahl';
