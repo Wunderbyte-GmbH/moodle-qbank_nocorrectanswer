@@ -194,14 +194,14 @@ class nocorrect_condition extends condition {
         if (($selectedoptions['in'][0] == 'gradedwrong')) {
             $where = "q.id NOT IN (
                     SELECT qa.questionid
-                    FROM m_question_attempt_steps qas
-                    JOIN m_question_attempts qa ON qa.id = qas.questionattemptid
+                    FROM {question_attempt_steps} qas
+                    JOIN {question_attempts} qa ON qa.id = qas.questionattemptid
                     WHERE qas.userid = :nocorrectuseruserid2 and qas.state = 'gradedright'
                     AND qas.timecreated = (
                         -- Subquery to get the latest timecreated for each question
                         SELECT MAX(qas2.timecreated)
-                        FROM m_question_attempt_steps qas2
-                        JOIN m_question_attempts qa2 ON qa2.id = qas2.questionattemptid
+                        FROM {question_attempt_steps} qas2
+                        JOIN {question_attempts} qa2 ON qa2.id = qas2.questionattemptid
                         WHERE qa2.questionid = qa.questionid
                         AND qas2.userid = :nocorrectuseruserid3
                         AND qas2.state IN ('gradedright', 'gradedwrong')
@@ -214,14 +214,14 @@ class nocorrect_condition extends condition {
         if (($selectedoptions['in'][0] == 'gradedright')) {
             $where = "q.id NOT IN (
                     SELECT qa.questionid
-                    FROM m_question_attempt_steps qas
-                    JOIN m_question_attempts qa ON qa.id = qas.questionattemptid
+                    FROM {question_attempt_steps} qas
+                    JOIN {question_attempts} qa ON qa.id = qas.questionattemptid
                     WHERE qas.userid = :nocorrectuseruserid2 and qas.state = 'gradedwrong'
                     AND qas.timecreated = (
                         -- Subquery to get the latest timecreated for each question
                         SELECT MAX(qas2.timecreated)
-                        FROM m_question_attempt_steps qas2
-                        JOIN m_question_attempts qa2 ON qa2.id = qas2.questionattemptid
+                        FROM {question_attempt_steps} qas2
+                        JOIN {question_attempts} qa2 ON qa2.id = qas2.questionattemptid
                         WHERE qa2.questionid = qa.questionid
                         AND qas2.userid = :nocorrectuseruserid3
                         AND qas2.state IN ('gradedright', 'gradedwrong')
