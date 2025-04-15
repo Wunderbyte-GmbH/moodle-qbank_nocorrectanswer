@@ -49,13 +49,13 @@
             <div class="qbank_nocorrectanswer_statistics">
                 <div class="qbank_nocorrectanswer_stat-item">
                     <i class="fa-solid fa-check-to-slot"></i>
-                        {{strings.edited_questions}}
+                        {{strings.edited_questions}} ({{editedquestions.pct.edit}}%)
                 </div>
                 <div class="qbank_nocorrectanswer_stat-item">
-                    <i class="fas fa-check-circle"></i> {{strings.correct_questions}}
+                    <i class="fas fa-check-circle"></i> {{strings.correct_questions}} ({{editedquestions.pct.correct}}%)
                 </div>
                 <div class="qbank_nocorrectanswer_stat-item">
-                    <i class="fas fa-exclamation-triangle"></i> {{strings.wrong_questions}}
+                    <i class="fas fa-exclamation-triangle"></i> {{strings.wrong_questions}} ({{editedquestions.pct.wrong}}%)
                 </div>
             </div>
             {{#wrongquiz}}

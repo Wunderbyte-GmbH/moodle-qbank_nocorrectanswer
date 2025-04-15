@@ -54,6 +54,18 @@ class renderer extends plugin_renderer_base {
 
     /**
      * Function to print html qoverview
+     * @param overview $data
+     * @return string
+     */
+    public function render_overviewwpct(overview $data) {
+        $o = '';
+        $data = $data->export_for_template($this);
+        $o .= $this->render_from_template('qbank_nocorrectanswer/overviewwpct', $data);
+        return $o;
+    }
+
+    /**
+     * Function to print html qoverview
      * @param resultoverview $data
      * @return string
      */

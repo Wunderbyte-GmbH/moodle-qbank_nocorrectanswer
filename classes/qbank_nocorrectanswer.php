@@ -64,6 +64,59 @@ class qbank_nocorrectanswer {
         return $records;
     }
 
+    public static function get_all_child_categories($parentid) {
+        global $DB;
+        if (empty($parentid)) {
+            return []; // Return empty array if invalid parent
+        }
+    
+        $categories = [$parentid];
+        $queue = [$parentid];
+    
+        while (!empty($queue)) {
+            $current = array_shift($queue);
+            $children = $DB->get_records('question_categories', ['parent' => $current], '', 'id');
+    
+            if (!empty($children)) {
+                foreach ($children as $child) {
+                    $categories[] = $child->id;
+                    $queue[] = $child->id;
+                }
+            }
+        }
+    
+        return $categories;
+    }
+    
+
+    /**
+     * Get all the questions from parentcategory.
+     *
+     * @param array $args
+     * @return array
+     */
+    public static function get_all_questions_from_parentcategory($args) {
+        global $DB;
+        $categoryids = self::get_all_child_categories($args['qcatid']);
+        $placeholders = implode(',', array_fill(0, count($categoryids), '?'));
+        
+        $sql = "SELECT q.*
+                FROM {question} q
+                JOIN {question_versions} qv ON q.id = qv.questionid
+                JOIN {question_bank_entries} qbe ON qv.questionbankentryid = qbe.id
+                WHERE qv.status = 'ready'
+                  AND qbe.questioncategoryid IN ($placeholders)
+                  AND qv.version = (
+                      SELECT MAX(qv2.version)
+                      FROM {question_versions} qv2
+                      WHERE qv2.questionbankentryid = qv.questionbankentryid
+                  )";
+        $params = $categoryids;
+
+        $records = $DB->get_records_sql($sql, $params);
+        return $records;
+    }
+
     /**
      * Get average quiz results.
      *
@@ -86,6 +139,54 @@ class qbank_nocorrectanswer {
      * @param array $args
      * @return array
      */
+    public static function get_all_edited_questions_from_parentcategory($args) {
+        global $DB, $USER;
+    
+        $params = ['nocorrectuseruserid' => $USER->id];
+    
+        [$insql, $inparams] = $DB->get_in_or_equal(['gradedright', 'gradedwrong'], SQL_PARAMS_NAMED, 'param', true);
+        $params = array_merge($params, $inparams);
+        $subwhere = " WHERE qas.userid = :nocorrectuseruserid AND qas.state $insql";
+    
+        $subwhere2 = "";
+        if (isset($args['qcatid'])) {
+            // Get child category IDs
+            $categoryids = self::get_all_child_categories($args['qcatid']); // You can reuse your existing function
+            if (empty($categoryids)) {
+                return []; // No categories found
+            }
+    
+            [$insql2, $inparams2] = $DB->get_in_or_equal($categoryids, SQL_PARAMS_NAMED, 'cat');
+            $subwhere2 = " AND qbe.questioncategoryid $insql2";
+            $params = array_merge($params, $inparams2);
+        }
+    
+        $select = "SELECT q.*, subquery.state ";
+        $join = " JOIN (
+              SELECT qa.questionid, qas.state
+              FROM {question_attempt_steps} qas
+              JOIN {question_attempts} qa ON qa.id = qas.questionattemptid
+              JOIN {question_usages} qu ON qu.id = qa.questionusageid
+              JOIN {context} c ON c.id = qu.contextid
+              LEFT JOIN {question_bank_entries} qbe ON qa.questionid = qbe.id
+              $subwhere
+        ) subquery ON q.id = subquery.questionid
+        $subwhere2";
+    
+        $sql = self::build_question_sql($select, $join);
+        $records = $DB->get_records_sql($sql, $params);
+        $userquestions = self::get_user_questiond_data($records);
+    
+        return $userquestions;
+    }
+    
+
+    /**
+     * Get all edited questions.
+     *
+     * @param array $args
+     * @return array
+     */
     public static function get_all_edited_questions($args) {
         global $DB, $USER;
         $sql = self::$sql;
@@ -96,10 +197,6 @@ class qbank_nocorrectanswer {
         $params = array_merge($params, $inparams);
         $subwhere .= $insql;
         $subwhere2 = "";
-        // if (isset($args['cmid'])) {
-        //     $subwhere .= " AND c.instanceid = :cinstanceid";
-        //     $params['cinstanceid'] = $args['cmid'];
-        // }
 
         if (isset($args['qcatid'])) {
             $subwhere2 = " WHERE qbe.questioncategoryid = :qcatid";

@@ -96,6 +96,19 @@ class overview implements renderable, templatable {
             ['wrong' => $this->editedquestions['wrong'], 'edit' => $this->editedquestions['edit']]
             ),
         ];
+        $this->editedquestions['pct']['edit'] = ($absquestions > 0)
+        ? round(100 * $editedquestions['edit'] / $absquestions, 2)
+        : 0;
+    
+        $this->editedquestions['pct']['correct'] = ($editedquestions['edit'] > 0)
+        ? round(100 * $editedquestions['correct'] / $editedquestions['edit'], 2)
+        : 0;
+            
+        $this->editedquestions['pct']['wrong'] = ($editedquestions['edit'] > 0)
+        ? round(100 * $editedquestions['wrong'] / $editedquestions['edit'], 2)
+        : 0;
+    
+
         $this->wrongquiz = $wrongquiz;
     }
 

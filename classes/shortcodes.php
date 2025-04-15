@@ -54,30 +54,77 @@ class shortcodes {
     public static function correctanswers($shortcode, $args, $content, $env, $next) {
 
         global $PAGE, $USER, $DB, $OUTPUT;
-
-        $allquestions = qbank_nocorrectanswer::get_all_questions($args);
-
-        $editedquestions = qbank_nocorrectanswer::get_all_edited_questions($args);
-
-        $wrongquiz = null;
-        if (isset($args['quizlink'])) {
-            preg_match('/href=(https?:\/\/[^ ]+)/', $args['quizlink'], $matches);
-            // The URL will be in $matches[1] if found
-            if (isset($matches[1])) {
-                $wrongquiz = $matches[1];
+        try {
+            $allquestions = qbank_nocorrectanswer::get_all_questions($args);
+            $editedquestions = qbank_nocorrectanswer::get_all_edited_questions($args);
+        
+            $wrongquiz = null;
+            if (isset($args['quizlink'])) {
+                preg_match('/href=(https?:\/\/[^ ]+)/', $args['quizlink'], $matches);
+                if (isset($matches[1])) {
+                    $wrongquiz = $matches[1];
+                }
             }
+        
+            // Get the renderer.
+            $output = $PAGE->get_renderer('qbank_nocorrectanswer');
+            $data = new overview(
+                [$editedquestions['correct'], $editedquestions['wrong']],
+                ['Correct', 'Wrong'],
+                count($allquestions),
+                $editedquestions,
+                $wrongquiz
+            );
+        
+            return $output->render_overview($data);
+        } catch (Exception $e) {
+            // Log the error if needed: error_log($e->getMessage());
+            return "error";
         }
+    }
 
-        // Get the renderer.
-        $output = $PAGE->get_renderer('qbank_nocorrectanswer');
-        $data = new overview(
-            [$editedquestions['correct'], $editedquestions['wrong']],
-            ['Correct', 'Wrong'],
-            count($allquestions),
-            $editedquestions,
-            $wrongquiz
-        );
-        return $output->render_overview($data);
+    /**
+     * This shortcode shows a list of booking options, which have a booking customfield...
+     * ... with the shortname "recommendedin" and the value set to the shortname of the course...
+     * ... in which they should appear.
+     *
+     * @param string $shortcode
+     * @param array $args
+     * @param string|null $content
+     * @param object $env
+     * @param Closure $next
+     * @return string
+     */
+    public static function correctanswerschilds($shortcode, $args, $content, $env, $next) {
+
+        global $PAGE, $USER, $DB, $OUTPUT;
+        try {
+            $allquestions = qbank_nocorrectanswer::get_all_questions_from_parentcategory($args);
+            $editedquestions = qbank_nocorrectanswer::get_all_edited_questions_from_parentcategory($args);
+        
+            $wrongquiz = null;
+            if (isset($args['quizlink'])) {
+                preg_match('/href=(https?:\/\/[^ ]+)/', $args['quizlink'], $matches);
+                if (isset($matches[1])) {
+                    $wrongquiz = $matches[1];
+                }
+            }
+        
+            // Get the renderer.
+            $output = $PAGE->get_renderer('qbank_nocorrectanswer');
+            $data = new overview(
+                [$editedquestions['correct'], $editedquestions['wrong']],
+                ['Correct', 'Wrong'],
+                count($allquestions),
+                $editedquestions,
+                $wrongquiz
+            );
+        
+            return $output->render_overviewwpct($data);
+        } catch (Exception $e) {
+            // Log the error if needed: error_log($e->getMessage());
+            return "error";
+        }
     }
 
     /**
