@@ -632,7 +632,9 @@ ORDER BY
                     $lastquiz->maxpoints = $result->maxpoints;
                     $lastquiz->grade = round( $result->maxpoints ?? 0, 2);
                     $lastquiz->usergrade = round( $result->usergrade ?? 0, 2);
+                    if ($result->maxpoints > 0) {
                     $lastquiz->percentage = round( $result->usergrade / $result->maxpoints * 100 ?? 0, 2);
+                    }
 
                     if (isset($args['refcmid'])) {
                         if ($config = get_config('qbank_nocorrectanswer', 'pc_' . $args['refcmid'])) {
